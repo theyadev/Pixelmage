@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-black-800 flex flex-col flex-grow items-center">
+  <div class="flex flex-col flex-grow items-center">
     <h1 class="mt-10 mb-10 text-5xl text-white">Pixelmage</h1>
 
     <div
