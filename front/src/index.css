@@ -9,7 +9,3 @@
 .btn {
     @apply ring-1 relative shadow-md cursor-pointer px-10 py-1 bg-black-800 rounded-full transition duration-500 focus:ring focus-within:ring-opacity-50 focus:shadow-lg
 }
-
-.select {
-    @apply rounded-full px-2.5 py-0.5
-}

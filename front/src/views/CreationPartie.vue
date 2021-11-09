@@ -18,13 +18,13 @@
       <div class="text-white text-2xl">Paramètres de la partie</div>
       <div class="flex flex-col items-center space-y-2">
         <div class="text-white">Catégorie</div>
-        <select class="select">
-          <option v-for="cat in categories" :key="cat">{{ cat }}</option>
+        <select class="rounded-full py-0.5 px-5">
+          <option v-for="categorie in categories" :key="categorie">{{ categorie }}</option>
         </select>
       </div>
       <div class="flex flex-col items-center space-y-2">
         <div class="text-white">Nombre de rounds</div>
-        <select class="select">
+        <select class="rounded-full py-0.5 px-6">
           <option v-for="i in 6" :key="i">{{ i + 4 }}</option>
         </select>
       </div>
