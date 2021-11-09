@@ -12,12 +12,12 @@ const routes: Array<RouteConfig> = [
   },
   {
     path: '/publics',
-    name: 'PartiesPubliques',
+    name: 'Parties Publiques',
     component: () => import('../views/PartiesPubliques.vue')
   },
   {
     path: '/create',
-    name: 'CreationPartie',
+    name: 'Creation Partie',
     component: () => import('../views/CreationPartie.vue')
   }
   // {
