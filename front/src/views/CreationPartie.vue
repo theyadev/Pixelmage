@@ -35,7 +35,7 @@
       </button>
       <input
         type="text"
-        :value="url"
+        :value="id"
         class="
           text-red-600
           ring-red-600 ring-1
@@ -74,6 +74,13 @@
               opacity-0
               group-hover:opacity-100
               pointer-events-none
+              transition
+              duration-300
+              transform
+              translate-y-7
+              scale-50
+              group-hover:-translate-y-0
+              group-hover:scale-100
             "
           >
             {{ users[i - 1] }}
@@ -121,7 +128,7 @@ export default {
         "Volca",
         "Cookie",
       ],
-      url: "ezeaze",
+      url: "/join?id=",
     };
   },
 };
