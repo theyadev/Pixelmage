@@ -35,7 +35,7 @@
           focus:shadow-lg
         "
       />
-      <button class="ring-purple-700 btn w-2/4 flex justify-center">
+      <button @click="joinGame" class="ring-purple-700 btn w-2/4 flex justify-center">
         <span class="font-medium uppercase text-purple-700">Jouer</span>
       </button>
       <button
@@ -52,11 +52,8 @@
 
 <script>
 export default {
-  mounted() {
-      this.socket.on("CREATED", () => {
-          this.$router.push({path:'/create', query: { id: this.id,}, props: { username: "Jean-Pierre" }})
-      })
-  },
+
+
   data() {
     return {
       socket: this.$store.state.socket,
@@ -66,14 +63,36 @@ export default {
     };
   },
   methods: {
+    notValidUsername() {
+      return !this.username || this.username.length < 4
+    },
     createGame() {
       console.log(this.username);
-      if (!this.username || this.username.length < 4) return
+      if (this.notValidUsername()) return
+
+      this.socket.once("CREATED", () => {
+          this.$store.state.username = this.username
+          this.$router.push({path:'/create', query: { id: this.id}})
+      })
+        
       this.socket.emit("CREATE", {
         id: this.id,
         name: this.username
       });
     },
+    joinGame() {
+      if (this.notValidUsername()) return;
+
+      this.socket.once("JOINED", () => {
+          this.$store.state.username = this.username
+          this.$router.push({path:'/create', query: { id: this.game_id}})
+      })
+
+      this.socket.emit("JOIN", {
+        id: parseInt(this.game_id),
+        name: this.username
+      });
+    }
   },
 };
 </script>

@@ -22,7 +22,9 @@ module.exports = {
   variants: {
     extend: {
       scale: ['group-hover'],
-      translate: ['group-hover']
+      translate: ['group-hover'],
+      opacity: ['disabled'],
+      cursor: ['disabled']
     },
   },
   plugins: [

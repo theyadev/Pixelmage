@@ -6,6 +6,7 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
+    username: null,
     socket: io("http://localhost:8000"),
     connected: false,
   },

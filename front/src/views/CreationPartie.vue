@@ -8,7 +8,7 @@
         <div class="text-white text-2xl">Paramètres de la partie</div>
         <div class="flex flex-col items-center space-y-2">
           <div class="text-white">Catégorie</div>
-          <select class="rounded-full py-0.5 px-5">
+          <select v-model="category" :disabled="!host" class="rounded-full py-0.5 px-5" @change="updateGameCategory($event)">
             <option v-for="categorie in categories" :key="categorie">
               {{ categorie }}
             </option>
@@ -16,24 +16,25 @@
         </div>
         <div class="flex flex-col items-center space-y-2">
           <div class="text-white">Nombre de rounds</div>
-          <select class="rounded-full py-0.5 px-6">
+          <select v-model="maxRounds" :disabled="!host" class="rounded-full py-0.5 px-6" @change="updateGameMaxRounds($event)">
             <option v-for="i in 6" :key="i">{{ i + 4 }}</option>
           </select>
         </div>
-        <button class="ring-purple-700 btn flex justify-center">
+        <button :disabled="!host" class="ring-purple-700 btn flex justify-center disabled:opacity-30 disabled:cursor-default">
           <span class="font-medium uppercase text-purple-700"
             >Démarrer la partie</span
           >
         </button>
         <input
           type="text"
-          :value="id"
+          :value="'localhost:8080/?id=' + id"
+          disabled
           class="
             text-red-600
             ring-red-600 ring-1
             relative
             shadow-md
-            px-10
+            px-5
             py-1
             bg-black-800
             rounded-full
@@ -48,7 +49,7 @@
           "
         />
         <div class="flex flex-wrap justify-center gap-3">
-          <div
+          <div 
             v-for="i in 20"
             :key="i"
             class="relative flex justify-center"
@@ -64,17 +65,18 @@
                 py-0.5
                 rounded-lg
                 opacity-0
-                group-hover:opacity-100
                 pointer-events-none
                 transition
                 duration-300
                 transform
                 translate-y-7
                 scale-50
-                group-hover:-translate-y-0 group-hover:scale-100
+                group-hover:opacity-100
+                group-hover:-translate-y-0
+                group-hover:scale-100
               "
             >
-              {{ users[i - 1] }}
+              {{ users[i - 1].username }}
             </div>
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -98,31 +100,46 @@
 
 <script>
 export default {
-  props: ["username"],
   mounted() {
-    console.log(this.username);
-    console.log(this.$route.params);
-    this.socket.on("JOINED", () => {
-      console.log("HELLO WORLDU SAMA");
+    this.socket.on("UPDATED", (data) => {
+      let users = data.users;
+      this.category = data.category;
+      this.maxRounds = data.maxRounds;
+      for (let i = 0; i < users.length; i++) {
+        if (users[i].username == this.$store.state.username && users[i].host) {
+          this.host = true
+        }
+        this.$set(this.users, i, users[i])
+      }
+    })
+
+    this.socket.emit("UPDATE", {
+      id: parseInt(this.id)
     });
+
+    if (this.$store.state.username == null) {
+      this.$router.push({path:'/'})
+    }
   },
   data() {
     return {
       socket: this.$store.state.socket,
-      id: this.$route.query.id,
+      id: parseInt(this.$route.query.id),
       categories: ["Anime", "Disney", "Célébrités"],
-      users: [
-        "Theya le méchant",
-        "Dark",
-        "Overangelix",
-        "Dioscure",
-        "Makaron",
-        "Volca",
-        "Cookie",
-      ],
-      url: "/join?id=",
+      users: [],
+      host: false,
+      category: "Anime",
+      maxRounds: 5,
     };
   },
+  methods :{
+    updateGameCategory(event){
+      this.socket.emit("UPDATECATEGORY", {category : event.target.value, id:this.id});
+    },
+    updateGameMaxRounds(event){
+      this.socket.emit("UPDATEMAXROUNDS", {maxRounds : event.target.value, id:this.id});
+    }
+  }
 };
 </script>
 

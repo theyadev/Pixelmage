@@ -19,16 +19,22 @@ const io = require("socket.io")(server, {
 
 const Games = new Map();
 
+
+
 io.on("connection", function (socket) {
+
+  function update(id) {
+    io.sockets.in(id).emit('UPDATED', Games.get(id));
+  }
+
   socket.on("CREATE", function (data) {
     if (!data.id || !data.name) return;
-    console.log("Hello");
+    console.log("CREATING");
     Games.set(data.id, {
       users: [{
         username: data.name,
         score: 0,
         answerStatus: false,
-        room: data.id,
         host: true,
       }],
       chat: [],
@@ -37,11 +43,58 @@ io.on("connection", function (socket) {
       answer: "",
       gameStart: true,
       currentRound: 1,
-      category: "",
+      category: "Anime",
+      maxRounds: 5,
       alreadyUsedImages: [],
     });
 
     socket.join(data.id);
     io.sockets.in(data.id).emit('CREATED', socket.id);
   });
+
+  socket.on("JOIN", function (data) {
+    if (!data.id || !data.name) return;
+
+    console.log("JOINING");
+
+    if (!Games.has(data.id)) return
+
+    Games.get(data.id).users.push({
+      username: data.name,
+      score: 0,
+      answerStatus: false,
+      host: false,
+    })
+
+    socket.join(data.id);
+    io.sockets.in(data.id).emit('JOINED')
+  });
+
+  socket.on("UPDATE", function (data) {
+    if (!data.id) return;
+
+    console.log("UPDATING");
+
+    if (!Games.has(data.id)) return
+
+    update(data.id)
+  });
+
+  socket.on("UPDATECATEGORY", function (data){
+    if (!data.category || !data.id) return;
+    
+    console.log("UPDATE CATEGORY");
+
+    Games.get(data.id).category = data.category;
+    update(data.id)
+  })
+
+  socket.on("UPDATEMAXROUNDS", function (data){
+    if (!data.maxRounds || !data.id) return;
+
+    console.log("UPDATE MAX ROUNDS");
+    Games.get(data.id).maxRounds = data.maxRounds;
+    update(data.id)
+  })
+
 });
