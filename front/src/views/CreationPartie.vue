@@ -105,9 +105,11 @@
 
 <script>
 export default {
+  created() {
+      window.addEventListener("beforeunload", this.handleRefresh)
+  },
   mounted() {
-    window.addEventListener("beforeunload", this.quit)
-
+    console.log(this.$store.state.username);
     if (this.$store.state.username == null) {
       this.$router.push({path:'/'})
     }
@@ -128,8 +130,14 @@ export default {
       id: parseInt(this.id)
     });
   },
+  beforeRouteLeave(to, from, next) {
+
+      this.quit()
+
+    next()
+  },
   destroyed() {
-    window.removeEventListener("beforeunload", this.quit)
+    window.removeEventListener("beforeunload", this.handleRefresh)
   },
   data() {
     return {
@@ -143,12 +151,20 @@ export default {
     };
   },
   methods :{
+    handleRefresh(event) {
+      this.quit()
+      event.stopImmediatePropagation()
+      event.preventDefault();
+    },
     quit() {
-      console.log(this.socket.emit("LEAVE", {
-        name: this.$store.state.username,
-        id: this.id
-      }));
-      
+      if (this.$store.state.username) {
+        console.log("PAGE REFRESH")
+        this.socket.emit("LEAVE", {
+          name: this.$store.state.username,
+          id: this.id
+        });
+        this.$store.state.username = null
+      }
     },
     updateGameCategory(event){
       this.socket.emit("UPDATECATEGORY", {category : event.target.value, id:this.id});
