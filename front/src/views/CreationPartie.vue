@@ -48,6 +48,11 @@
             cursor-text
           "
         />
+        <button class="ring-green-700 btn flex justify-center" @click="copyLink">
+          <span class="font-medium uppercase text-green-700"
+            >Copier le lien</span
+          >
+        </button>
         <div class="flex flex-wrap justify-center gap-3">
           <div 
             v-for="i in 20"
@@ -138,6 +143,10 @@ export default {
     },
     updateGameMaxRounds(event){
       this.socket.emit("UPDATEMAXROUNDS", {maxRounds : event.target.value, id:this.id});
+    },
+    copyLink(){
+      let url = 'localhost:8080/?id=' + this.id
+      navigator.clipboard.writeText(url)
     }
   }
 };
