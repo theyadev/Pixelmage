@@ -27,6 +27,13 @@ io.on("connection", function (socket) {
     io.sockets.in(id).emit('UPDATED', Games.get(id));
   }
 
+  socket.on("LEAVE", function(data) {
+    console.log("username : "+data.name)
+    console.log("id : "+data.id)
+    if (!data.name || !data.id) return
+    console.log(data.name + " a quitté ")
+  })
+
   socket.on("CREATE", function (data) {
     if (!data.id || !data.name) return;
     console.log("CREATING");
@@ -80,7 +87,7 @@ io.on("connection", function (socket) {
     update(data.id)
   });
 
-  socket.on("UPDATECATEGORY", function (data){
+  socket.on("UPDATECATEGORY", function (data) {
     if (!data.category || !data.id) return;
     
     console.log("UPDATE CATEGORY");
@@ -89,12 +96,18 @@ io.on("connection", function (socket) {
     update(data.id)
   })
 
-  socket.on("UPDATEMAXROUNDS", function (data){
+  socket.on("UPDATEMAXROUNDS", function (data) {
     if (!data.maxRounds || !data.id) return;
 
     console.log("UPDATE MAX ROUNDS");
     Games.get(data.id).maxRounds = data.maxRounds;
     update(data.id)
   })
+
+  socket.on("QUITLOBBY", function() {
+    console.log("test")
+  })
+
+  
 
 });

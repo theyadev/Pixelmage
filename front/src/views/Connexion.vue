@@ -52,8 +52,6 @@
 
 <script>
 export default {
-
-
   data() {
     return {
       socket: this.$store.state.socket,

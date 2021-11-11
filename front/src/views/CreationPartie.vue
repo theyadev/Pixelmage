@@ -106,6 +106,12 @@
 <script>
 export default {
   mounted() {
+    window.addEventListener("beforeunload", this.quit)
+
+    if (this.$store.state.username == null) {
+      this.$router.push({path:'/'})
+    }
+
     this.socket.on("UPDATED", (data) => {
       let users = data.users;
       this.category = data.category;
@@ -121,10 +127,9 @@ export default {
     this.socket.emit("UPDATE", {
       id: parseInt(this.id)
     });
-
-    if (this.$store.state.username == null) {
-      this.$router.push({path:'/'})
-    }
+  },
+  destroyed() {
+    window.removeEventListener("beforeunload", this.quit)
   },
   data() {
     return {
@@ -138,6 +143,13 @@ export default {
     };
   },
   methods :{
+    quit() {
+      console.log(this.socket.emit("LEAVE", {
+        name: this.$store.state.username,
+        id: this.id
+      }));
+      
+    },
     updateGameCategory(event){
       this.socket.emit("UPDATECATEGORY", {category : event.target.value, id:this.id});
     },
