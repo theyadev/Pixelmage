@@ -54,6 +54,7 @@ io.on("connection", function (socket) {
   });
   
   socket.on("JOIN", function (data) {
+    console.log(data);
     if (!data.id || !data.name) return;
     
     console.log("JOINING");
@@ -62,6 +63,18 @@ io.on("connection", function (socket) {
 
     // TODO: Si il y a deja le meme pseudo dans la salle return Message "Pseudo deja pris"
     // TODO: Si il y a plus de 20 joueurs return Message: "Salle pleine"
+
+    if (Games.get(data.id).users.some(user => user.username == data.name)) {
+      return socket.emit("ERROR", {
+        error: "Il y a deja cet utilisateur dans la salle !"
+      })
+    }
+
+    if (Games.get(data.id).users.length >= 20) {
+      return socket.emit("ERROR", {
+        error: "Game is full !"
+      })
+    }
     
     Games.get(data.id).users.push({
       username: data.name,
@@ -71,7 +84,7 @@ io.on("connection", function (socket) {
     })
     
     socket.join(data.id);
-    io.sockets.in(data.id).emit('JOINED')
+    socket.emit('JOINED')
   });
   
   socket.on("UPDATE", function (data) {
