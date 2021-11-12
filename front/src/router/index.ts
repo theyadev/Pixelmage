@@ -19,6 +19,11 @@ const routes: Array<RouteConfig> = [
     path: '/create',
     name: 'Creation Partie',
     component: () => import('../views/CreationPartie.vue')
+  },
+  {
+    path: '/game',
+    name: 'Jeu',
+    component: () => import('../views/Jeu.vue')
   }
   // {
   //   path: '/about',
