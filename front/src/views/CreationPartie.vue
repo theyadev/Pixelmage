@@ -118,11 +118,15 @@ export default {
       let users = data.users;
       this.category = data.category;
       this.maxRounds = data.maxRounds;
-      for (let i = 0; i < users.length; i++) {
-        if (users[i].username == this.$store.state.username && users[i].host) {
-          this.host = true
+      for (let i = 0; i < 20; i++) {
+        if (users[i]) {
+          if (users[i].username == this.$store.state.username && users[i].host) {
+            this.host = true
+          }
+          this.$set(this.users, i, users[i])
+        } else {
+          this.$set(this.users, i, null)
         }
-        this.$set(this.users, i, users[i])
       }
     })
 

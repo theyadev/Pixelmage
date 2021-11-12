@@ -27,13 +27,7 @@ io.on("connection", function (socket) {
     io.sockets.in(id).emit('UPDATED', Games.get(id));
   }
 
-  socket.on("LEAVE", function(data) {
-    console.log("username : "+data.name)
-    console.log("id : "+data.id)
-    if (!data.name || !data.id) return
-    console.log(data.name + " a quitté ")
-  })
-
+  
   socket.on("CREATE", function (data) {
     if (!data.id || !data.name) return;
     console.log("CREATING");
@@ -54,60 +48,73 @@ io.on("connection", function (socket) {
       maxRounds: 5,
       alreadyUsedImages: [],
     });
-
+    
     socket.join(data.id);
     io.sockets.in(data.id).emit('CREATED', socket.id);
   });
-
+  
   socket.on("JOIN", function (data) {
     if (!data.id || !data.name) return;
-
+    
     console.log("JOINING");
-
+    
     if (!Games.has(data.id)) return
 
+    // TODO: Si il y a deja le meme pseudo dans la salle return Message "Pseudo deja pris"
+    // TODO: Si il y a plus de 20 joueurs return Message: "Salle pleine"
+    
     Games.get(data.id).users.push({
       username: data.name,
       score: 0,
       answerStatus: false,
       host: false,
     })
-
+    
     socket.join(data.id);
     io.sockets.in(data.id).emit('JOINED')
   });
-
+  
   socket.on("UPDATE", function (data) {
     if (!data.id) return;
-
+    
     console.log("UPDATING");
-
+    
     if (!Games.has(data.id)) return
-
+    
     update(data.id)
   });
-
+  
   socket.on("UPDATECATEGORY", function (data) {
     if (!data.category || !data.id) return;
     
     console.log("UPDATE CATEGORY");
-
+    
     Games.get(data.id).category = data.category;
     update(data.id)
   })
-
+  
   socket.on("UPDATEMAXROUNDS", function (data) {
     if (!data.maxRounds || !data.id) return;
-
+    
     console.log("UPDATE MAX ROUNDS");
     Games.get(data.id).maxRounds = data.maxRounds;
     update(data.id)
   })
-
-  socket.on("QUITLOBBY", function() {
-    console.log("test")
-  })
-
   
+  socket.on("LEAVE", function(data) {
+    if (!data.name || !data.id) return
 
+    if (!Games.has(data.id)) return
+
+    // TODO: Si c'est le host qui quitte, alors : 1* Changer le host au joueur suivant | 2* Faire quitter tout le monde.
+    
+    console.log("LEAVING");
+    
+    const index = Games.get(data.id).users.findIndex(e => e.name == data.name)
+
+    Games.get(data.id).users.splice(index, 1)
+
+    update(data.id)
+  })
+  
 });
