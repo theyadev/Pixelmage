@@ -20,7 +20,7 @@
           <select
             v-model="category"
             :disabled="!host"
-            class="rounded-full py-0.5 px-5"
+            class="rounded-full py-1"
             @change="updateGameCategory($event)"
           >
             <option v-for="categorie in categories" :key="categorie">
@@ -33,7 +33,7 @@
           <select
             v-model="maxRounds"
             :disabled="!host"
-            class="rounded-full py-0.5 px-6"
+            class="rounded-full py-1"
             @change="updateGameMaxRounds($event)"
           >
             <option v-for="i in 6" :key="i">{{ i + 4 }}</option>
@@ -93,24 +93,7 @@
           >
             <div
               v-if="users[i - 1]"
-              class="
-                absolute
-                bottom-7
-                bg-white
-                px-2
-                py-0.5
-                rounded-lg
-                opacity-0
-                pointer-events-none
-                transition
-                duration-300
-                transform
-                translate-y-7
-                scale-50
-                group-hover:opacity-100
-                group-hover:-translate-y-0
-                group-hover:scale-100
-              "
+              class="icon-tooltip"
             >
               {{ users[i - 1].username }}
             </div>
