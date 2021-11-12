@@ -9,3 +9,7 @@
 .btn {
     @apply ring-1 relative shadow-md cursor-pointer px-10 py-1 bg-black-800 rounded-full transition duration-500 focus:ring focus-within:ring-opacity-50 focus:shadow-lg
 }
+
+.icon-tooltip {
+    @apply absolute bottom-7 bg-white px-2 py-0.5 rounded-lg opacity-0 pointer-events-none transition duration-300 transform translate-y-7 scale-50 group-hover:opacity-100 group-hover:-translate-y-0 group-hover:scale-100
+}

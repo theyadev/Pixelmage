@@ -3,12 +3,26 @@
     <h1 class="mt-10 mb-10 text-5xl text-white">Pixelmage</h1>
     <div class="grid grid-cols-1 lg:grid-cols-3 px-10 gap-4 md:px-52 lg:px-0">
       <div
-        class="col-start-2 rounded-2xl shadow-xl bg-black-700 flex flex-col items-center p-10 space-y-5"
+        class="
+          col-start-2
+          rounded-2xl
+          shadow-xl
+          bg-black-700
+          flex flex-col
+          items-center
+          p-10
+          space-y-5
+        "
       >
         <div class="text-white text-2xl">Paramètres de la partie</div>
         <div class="flex flex-col items-center space-y-2">
           <div class="text-white">Catégorie</div>
-          <select v-model="category" :disabled="!host" class="rounded-full py-0.5 px-5" @change="updateGameCategory($event)">
+          <select
+            v-model="category"
+            :disabled="!host"
+            class="rounded-full py-1"
+            @change="updateGameCategory($event)"
+          >
             <option v-for="categorie in categories" :key="categorie">
               {{ categorie }}
             </option>
@@ -16,16 +30,30 @@
         </div>
         <div class="flex flex-col items-center space-y-2">
           <div class="text-white">Nombre de rounds</div>
-          <select v-model="maxRounds" :disabled="!host" class="rounded-full py-0.5 px-6" @change="updateGameMaxRounds($event)">
+          <select
+            v-model="maxRounds"
+            :disabled="!host"
+            class="rounded-full py-1"
+            @change="updateGameMaxRounds($event)"
+          >
             <option v-for="i in 6" :key="i">{{ i + 4 }}</option>
           </select>
         </div>
-        <button :disabled="!host" class="ring-purple-700 btn flex justify-center disabled:opacity-30 disabled:cursor-default">
+        <button
+          :disabled="!host"
+          class="
+            ring-purple-700
+            btn
+            flex
+            justify-center
+            disabled:opacity-30 disabled:cursor-default
+          "
+        >
           <span class="font-medium uppercase text-purple-700"
             >Démarrer la partie</span
           >
         </button>
-        <input
+        <!-- <input
           type="text"
           :value="'localhost:8080/?id=' + id"
           disabled
@@ -47,14 +75,17 @@
             justify-center
             cursor-text
           "
-        />
-        <button class="ring-green-700 btn flex justify-center" @click="copyLink">
+        /> -->
+        <button
+          class="ring-green-700 btn flex justify-center"
+          @click="copyLink"
+        >
           <span class="font-medium uppercase text-green-700"
             >Copier le lien</span
           >
         </button>
         <div class="flex flex-wrap justify-center gap-3">
-          <div 
+          <div
             v-for="i in 20"
             :key="i"
             class="relative flex justify-center"
@@ -62,24 +93,7 @@
           >
             <div
               v-if="users[i - 1]"
-              class="
-                absolute
-                bottom-7
-                bg-white
-                px-2
-                py-0.5
-                rounded-lg
-                opacity-0
-                pointer-events-none
-                transition
-                duration-300
-                transform
-                translate-y-7
-                scale-50
-                group-hover:opacity-100
-                group-hover:-translate-y-0
-                group-hover:scale-100
-              "
+              class="icon-tooltip"
             >
               {{ users[i - 1].username }}
             </div>
@@ -106,12 +120,12 @@
 <script>
 export default {
   created() {
-      window.addEventListener("beforeunload", this.handleRefresh)
+    window.addEventListener("beforeunload", this.handleRefresh);
   },
   mounted() {
     console.log(this.$store.state.username);
     if (this.$store.state.username == null) {
-      this.$router.push({path:'/'})
+      this.$router.push({ path: "/" });
     }
 
     this.socket.on("UPDATED", (data) => {
@@ -128,20 +142,19 @@ export default {
           this.$set(this.users, i, null)
         }
       }
-    })
+    });
 
     this.socket.emit("UPDATE", {
-      id: parseInt(this.id)
+      id: parseInt(this.id),
     });
   },
   beforeRouteLeave(to, from, next) {
+    this.quit();
 
-      this.quit()
-
-    next()
+    next();
   },
   destroyed() {
-    window.removeEventListener("beforeunload", this.handleRefresh)
+    window.removeEventListener("beforeunload", this.handleRefresh);
   },
   data() {
     return {
@@ -154,33 +167,39 @@ export default {
       maxRounds: 5,
     };
   },
-  methods :{
+  methods: {
     handleRefresh(event) {
-      this.quit()
-      event.stopImmediatePropagation()
+      this.quit();
+      event.stopImmediatePropagation();
       event.preventDefault();
     },
     quit() {
       if (this.$store.state.username) {
-        console.log("PAGE REFRESH")
+        console.log("PAGE REFRESH");
         this.socket.emit("LEAVE", {
           name: this.$store.state.username,
-          id: this.id
+          id: this.id,
         });
-        this.$store.state.username = null
+        this.$store.state.username = null;
       }
     },
-    updateGameCategory(event){
-      this.socket.emit("UPDATECATEGORY", {category : event.target.value, id:this.id});
+    updateGameCategory(event) {
+      this.socket.emit("UPDATECATEGORY", {
+        category: event.target.value,
+        id: this.id,
+      });
     },
-    updateGameMaxRounds(event){
-      this.socket.emit("UPDATEMAXROUNDS", {maxRounds : event.target.value, id:this.id});
+    updateGameMaxRounds(event) {
+      this.socket.emit("UPDATEMAXROUNDS", {
+        maxRounds: event.target.value,
+        id: this.id,
+      });
     },
-    copyLink(){
-      let url = 'localhost:8080/?id=' + this.id
-      navigator.clipboard.writeText(url)
-    }
-  }
+    copyLink() {
+      const url = "localhost:8080/?id=" + this.id;
+      navigator.clipboard.writeText(url);
+    },
+  },
 };
 </script>
 
