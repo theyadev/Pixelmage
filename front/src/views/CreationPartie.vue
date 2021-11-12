@@ -49,7 +49,7 @@
             disabled:opacity-30 disabled:cursor-default
           "
         >
-          <span class="font-medium uppercase text-purple-700"
+          <span class="font-medium uppercase text-purple-700" @click="startGame"
             >Démarrer la partie</span
           >
         </button>
@@ -91,10 +91,7 @@
             class="relative flex justify-center"
             :class="[users[i - 1] ? 'group' : '']"
           >
-            <div
-              v-if="users[i - 1]"
-              class="icon-tooltip"
-            >
+            <div v-if="users[i - 1]" class="icon-tooltip">
               {{ users[i - 1].username }}
             </div>
             <svg
@@ -128,29 +125,39 @@ export default {
       this.$router.push({ path: "/" });
     }
 
-    this.socket.on("UPDATED", (data) => {
-      let users = data.users;
-      this.category = data.category;
-      this.maxRounds = data.maxRounds;
+    this.socket.on("UPDATED", (room) => {
+      if (room.started == true) {
+        this.socket.off("UPDATED")
+        this.$router.push({ path: "/game", query: { id: room.id } });
+        return
+      }
+
+      let users = room.users;
+      this.category = room.category;
+      this.maxRounds = room.maxRounds;
       for (let i = 0; i < 20; i++) {
         if (users[i]) {
-          if (users[i].username == this.$store.state.username && users[i].host) {
-            this.host = true
+          if (
+            users[i].username == this.$store.state.username &&
+            users[i].host
+          ) {
+            this.host = true;
           }
-          this.$set(this.users, i, users[i])
+          this.$set(this.users, i, users[i]);
         } else {
-          this.$set(this.users, i, null)
+          this.$set(this.users, i, null);
         }
       }
     });
 
     this.socket.emit("UPDATE", {
       id: parseInt(this.id),
-    });
+    }); 
   },
   beforeRouteLeave(to, from, next) {
-    this.quit();
+    if (to.name != "Jeu") this.quit();
 
+    
     next();
   },
   destroyed() {
@@ -196,8 +203,16 @@ export default {
       });
     },
     copyLink() {
-      const url = "localhost:8080/?id=" + this.id;
+      const url = "http://localhost:8080/?id=" + this.id;
       navigator.clipboard.writeText(url);
+      this.$toasted.success("Copied !", {
+        theme: "toasted-primary",
+        position: "top-center",
+        duration: 1000,
+      });
+    },
+    startGame() {
+      this.socket.emit("START", { id: this.id });
     },
   },
 };

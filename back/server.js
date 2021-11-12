@@ -35,6 +35,7 @@ io.on("connection", function (socket) {
 
     // Initialize the room and add the creator to it
     Rooms.set(data.id, {
+      id: data.id,
       users: [
         {
           username: data.name,
@@ -49,7 +50,7 @@ io.on("connection", function (socket) {
       // pixelisationStatus: 0,
       // currentImage: 0,
       // answer: "",
-      // gameStart: true,
+      started: false,
       // currentRound: 1,
       // alreadyUsedImages: [],
     });
@@ -133,18 +134,38 @@ io.on("connection", function (socket) {
     // If room doesn't exist
     if (!Rooms.has(data.id)) return;
 
-    // TODO: Si c'est le host qui quitte, alors : 1* Changer le host au joueur suivant | 2* Faire quitter tout le monde.
-
     console.log("LEAVING");
 
     // Get the index of the user who is quitting
     const index = Rooms.get(data.id).users.findIndex(
-      (e) => e.name == data.name
+      (e) => e.username == data.name
     );
 
     // Remove the user from the room
-    Rooms.get(data.id).users.splice(index, 1);
+    const user = Rooms.get(data.id).users.splice(index, 1)[0];
+
+    // If the leaving user is host, pass the host to the next player
+    if (user.host == true) {
+      // Is there's no one in the room, close the game
+      if (Rooms.get(data.id).users.length == 0) {
+        Rooms.delete(data.id)
+        return
+      }
+      Rooms.get(data.id).users[0].host = true
+    }
+
+    console.log(Rooms.get(data.id));
 
     update(data.id);
   });
+
+  socket.on("START", function (data){
+    if (!data.id) return
+    
+    console.log("STARTING");
+
+    Rooms.get(data.id).started = true
+    update(data.id)
+  })
+
 });
