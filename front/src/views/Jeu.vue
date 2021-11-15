@@ -52,7 +52,7 @@
         </div>
       </div>
       <div class="relative flex items-center justify-end">
-        <form @submit.prevent="sendMessage" class="flex items-center">
+        <form @submit.prevent="sendMessage" class="w-full flex items-center">
           <button
             type="submit"
             class="
