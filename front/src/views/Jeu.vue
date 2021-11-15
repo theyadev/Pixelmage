@@ -2,10 +2,8 @@
   <div class="grid grid-cols-1 md:grid-cols-8 h-full">
     <div
       class="
-        md:row-span-2
-        md:col-span-2
-        lg:col-span-1
-        lg:row-span-1
+        md:row-span-2 md:col-span-2
+        lg:col-span-1 lg:row-span-1
         bg-red-400
         flex flex-col
         items-center
@@ -15,7 +13,6 @@
       "
     >
       <div
-      
         v-for="user in users"
         :key="user.username"
         class="py-2 px-6 bg-white rounded w-full flex flex-col items-center"
@@ -43,16 +40,18 @@
       <div class="flex flex-col items-center justify-center pt-5 space-y-8">
         <div class="relative flex items-center">
           <Timer
-            v-if="current > 0"
             :max="max"
-            :current="current"
+            :current="max-current"
             class="absolute -left-48 top-1 w-14 h-14"
           />
           <div class="text-white font-bold text-5xl">
             _ _ _&nbsp;&nbsp;_ _ _&nbsp;&nbsp;_ _
           </div>
         </div>
-        <img :src="image" class="w-8/12 rounded-lg" />
+        <img
+          :src="image"
+          class="w-8/12 rounded-lg object-contain lg:max-h-96"
+        />
         <form @submit.prevent="submitAnswer" class="w-full flex justify-center">
           <input
             v-model="reponse"
@@ -65,7 +64,10 @@
     <div
       class="md:col-span-6 lg:col-span-2 flex flex-col bg-black-400 px-5 py-5"
     >
-      <div class="flex-grow h-80 overflow-y-auto mb-5 space-y-5 hide-scroll" id="chat">
+      <div
+        class="flex-grow h-80 overflow-y-auto mb-5 space-y-5 hide-scroll"
+        id="chat"
+      >
         <div
           v-for="(message, i) in chat"
           :key="message.author + i"
@@ -133,51 +135,88 @@ import Timer from "../components/Timer.vue";
 export default {
   mounted() {
     this.socket.on("UPDATED", (room) => {
-      // TODO: Verifier si le sort marche xD
+      // TODO: Verifier si le sort marche
 
       function sortThing(a, b) {
-        return a.score - b.score
+        return b.score - a.score;
       }
 
-      this.users = room.users.sort(sortThing)
+      this.users = room.users.sort(sortThing);
 
-      this.chat = room.chat
+      this.chat = room.chat;
+
+      this.image = room.image;
+
+      this.max = room.maxTime
     });
 
     this.socket.on("CHAT", (chat) => {
       // Update chat
-      this.chat = chat
+      this.chat = chat;
 
       // Scroll at the end of the chat
       const chatDiv = document.getElementById("chat");
       chatDiv.scrollTop = chatDiv.scrollHeight;
-    })
-
-    this.socket.on("STARTROUND", (image) => {
-      
-      this.image = image.toString()
-    })
+    });
 
     this.socket.emit("UPDATE", {
       id: parseInt(this.id),
     });
-    //   socket.on('UPDATETIME', (currentTime) => {
-    //       this.current = currentTime
-    //   })
+
+    this.socket.on("UPDATE TIMER", (currentTime) => {
+      console.log(currentTime);
+
+      this.current = currentTime;
+    });
   },
   components: {
     Timer,
   },
   methods: {
     submitAnswer() {
+      const index = this.users.findIndex((e) => e.username == this.username);
+
+      if (this.users[index].answerStatus == true) {
+        return this.$toasted.show("Vous avez déjà répondu !", {
+          theme: "toasted-primary",
+          containerClass: "test",
+          position: "top-center",
+          duration: 500,
+        });
+      }
+
+      this.socket.once("GOOD ANSWER", () => {
+        this.$toasted.success("Bonne réponse !", {
+          theme: "toasted-primary",
+          position: "top-center",
+          duration: 5000,
+        });
+        this.socket.off("WRONG ANSWER");
+      });
+
+      this.socket.once("WRONG ANSWER", () => {
+        this.$toasted.error("Mauvaise réponse !", {
+          theme: "toasted-primary",
+          position: "top-center",
+          duration: 2000,
+        });
+        this.socket.off("GOOD ANSWER");
+      });
+
+      this.socket.emit("ANSWER", {
+        id: this.id,
+        name: this.username,
+        answer: this.reponse,
+      });
+
       this.reponse = "";
     },
     sendMessage() {
       this.socket.emit("MESSAGE", {
         id: this.id,
         username: this.username,
-        message : this.message
-        })
+        message: this.message,
+      });
       this.message = "";
     },
   },
@@ -193,7 +232,7 @@ export default {
       image: "",
       reponse: "",
       message: "",
-      answer: "Mickey",
+      answer: "",
     };
   },
 };
@@ -203,7 +242,7 @@ export default {
 .hide-scroll::-webkit-scrollbar {
   display: none;
 }
-.hide-scroll{
+.hide-scroll {
   scroll-behavior: auto;
 }
 </style>

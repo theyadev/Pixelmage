@@ -25,7 +25,8 @@ io.on("connection", function (socket) {
    * @param {string} id
    */
   function update(id) {
-    const room = Rooms.get(id)
+    const room = Rooms.get(id);
+    const currentRoundImageIndex = Rooms.get(id).currentRound - 1;
 
     io.sockets.in(id).emit("UPDATED", {
       id: room.id,
@@ -33,9 +34,15 @@ io.on("connection", function (socket) {
       category: room.category,
       currentRound: room.currentRound,
       maxRounds: room.maxRounds,
+      maxTime: room.maxTime,
       chat: room.chat,
       started: room.started,
+      image: Rooms.get(id).answers[currentRoundImageIndex]?.image,
     });
+  }
+
+  function getUserIndex(id, username) {
+    return Rooms.get(id).users.findIndex((e) => e.username == username);
   }
 
   socket.on("CREATE", function (data) {
@@ -51,16 +58,16 @@ io.on("connection", function (socket) {
           username: data.name,
           score: 0,
           host: true,
-          // answered: false,
+          answered: false,
         },
       ],
       category: "Anime",
       currentRound: 1,
       maxRounds: 5,
+      maxTime: 10,
       chat: [],
-      images: [],
       // pixelisationStatus: 0,
-      // answer: "",
+      answers: [],
       started: false,
       // alreadyUsedImages: [],
     });
@@ -134,7 +141,7 @@ io.on("connection", function (socket) {
     console.log("UPDATE MAX ROUNDS");
 
     Rooms.get(data.id).maxRounds = data.maxRounds;
-    
+
     update(data.id);
   });
 
@@ -147,9 +154,7 @@ io.on("connection", function (socket) {
     console.log("LEAVING");
 
     // Get the index of the user who is quitting
-    const index = Rooms.get(data.id).users.findIndex(
-      (e) => e.username == data.name
-    );
+    const index = getUserIndex(data.id, data.name);
 
     // Remove the user from the room
     const user = Rooms.get(data.id).users.splice(index, 1)[0];
@@ -158,10 +163,10 @@ io.on("connection", function (socket) {
     if (user.host == true) {
       // Is there's no one in the room, close the game
       if (Rooms.get(data.id).users.length == 0) {
-        Rooms.delete(data.id)
-        return
+        Rooms.delete(data.id);
+        return;
       }
-      Rooms.get(data.id).users[0].host = true
+      Rooms.get(data.id).users[0].host = true;
     }
 
     console.log(Rooms.get(data.id));
@@ -169,38 +174,88 @@ io.on("connection", function (socket) {
     update(data.id);
   });
 
-  function startRound(id) {
-    const currentRoundImageIndex = Rooms.get(id).currentRound - 1
-
-    io.sockets.in(id).emit("STARTROUND", Rooms.get(id).images[currentRoundImageIndex])
+  function resetAnswer(id) {
+    for (let i = 0; i < Rooms.get(id).users.length; i++) {
+      Rooms.get(id).users[i].answerStatus = false;
+    }
   }
 
-  socket.on("START", function (data){
-    if (!data.id) return
-    
+  function startNextRound(id) {
+    let i = 0;
+
+    let interval = setInterval(() => {
+      i += 0.1;
+
+      io.sockets.in(id).emit("UPDATE TIMER", i);
+
+      if (i >= Rooms.get(id).maxTime) {
+        console.log("ROUND SUIVANT !");
+        Rooms.get(id).currentRound++;
+        clearInterval(interval);
+        resetAnswer(id);
+        update(id);
+        if (Rooms.get(id).maxRounds == Rooms.get(id).currentRound) {
+          console.log("FIN DE LA PARTIE");
+          return;
+        } else {
+          startNextRound(id);
+        }
+      }
+    }, 100);
+  }
+
+  socket.on("START", function (data) {
+    if (!data.id) return;
+
     console.log("STARTING");
 
-    Rooms.get(data.id).started = true
-    
+    resetAnswer(data.id);
+
+    Rooms.get(data.id).started = true;
+
     for (let i = 0; i < Rooms.get(data.id).maxRounds; i++) {
       // TODO: Mettre des images aléatoires, sans duplicate
-      Rooms.get(data.id).images.push("https://pokemonletsgo.pokemon.com/assets/img/common/char-pikachu.png")
+      Rooms.get(data.id).answers.push({
+        image:
+          "https://pokemonletsgo.pokemon.com/assets/img/common/char-pikachu.png",
+        name: "pikachu",
+        aliases: ["pikapika"],
+      });
     }
 
-    startRound(data.id)
+    update(data.id);
 
-    update(data.id)
-  })
+    startNextRound(data.id);
+  });
 
   socket.on("MESSAGE", function (data) {
     const message = {
       author: data.username,
       content: data.message,
-      date: new Date()
+      date: new Date(),
+    };
+    Rooms.get(data.id).chat.push(message);
+
+    io.sockets.in(data.id).emit("CHAT", Rooms.get(data.id).chat);
+  });
+
+  socket.on("ANSWER", function (data) {
+    const currentRoundImageIndex = Rooms.get(data.id).currentRound - 1
+    if (
+      data.answer.toLowerCase() == Rooms.get(data.id).answers[currentRoundImageIndex].name ||
+      Rooms.get(data.id).answers[currentRoundImageIndex].aliases.includes(data.answer.toLowerCase())
+    ) {
+      const index = getUserIndex(data.id, data.name);
+
+      Rooms.get(data.id).users[index].answerStatus = true;
+
+      Rooms.get(data.id).users[index].score++;
+
+      socket.emit("GOOD ANSWER");
+
+      update(data.id);
+    } else {
+      socket.emit("WRONG ANSWER");
     }
-    Rooms.get(data.id).chat.push(message)
-
-    io.sockets.in(data.id).emit("CHAT", Rooms.get(data.id).chat)
-  })
-
+  });
 });
