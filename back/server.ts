@@ -36,6 +36,7 @@ type User = {
   score: number;
   host: boolean;
   answered: boolean;
+  color: string;
 };
 
 type Room = {
@@ -149,7 +150,8 @@ io.on("connection", function (socket: Socket) {
           score: 0,
           host: true,
           answered: false,
-        },
+          color : ""
+        }
       ],
       category: "Anime",
       currentRound: 1,
@@ -203,6 +205,7 @@ io.on("connection", function (socket: Socket) {
       score: 0,
       answered: false,
       host: false,
+      color: ""
     });
 
     socket.join(data.id);
@@ -255,6 +258,20 @@ io.on("connection", function (socket: Socket) {
     room.maxRounds = data.maxRounds;
 
     update(data.id);
+  });
+
+  /**
+   * Change the color
+   */
+
+  socket.on("CHANGE COLOR", function (data){
+    const room = Rooms.get(data.id);
+
+    if (!room) return
+
+    const index = getUserIndex(data.id, data.name)
+
+    room.users[index].color = data.color
   });
 
   /**
