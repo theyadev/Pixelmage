@@ -165,13 +165,13 @@ export default {
       }
     },
     updateGameCategory(event) {
-      this.socket.emit("UPDATECATEGORY", {
+      this.socket.emit("UPDATE CATEGORY", {
         category: event.target.value,
         id: this.id,
       });
     },
     updateGameMaxRounds(event) {
-      this.socket.emit("UPDATEMAXROUNDS", {
+      this.socket.emit("UPDATE MAX ROUNDS", {
         maxRounds: event.target.value,
         id: this.id,
       });

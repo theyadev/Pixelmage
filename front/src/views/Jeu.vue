@@ -176,7 +176,7 @@ export default {
     submitAnswer() {
       const index = this.users.findIndex((e) => e.username == this.username);
 
-      if (this.users[index].answerStatus == true) {
+      if (this.users[index].answered == true) {
         return this.$toasted.show("Vous avez déjà répondu !", {
           theme: "toasted-primary",
           containerClass: "test",
