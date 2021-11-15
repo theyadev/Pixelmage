@@ -15,17 +15,20 @@
           </div>
         </div>
         <img src="/testimg.jpg" class="w-8/12 rounded-lg" />
-        <input
-          type="text"
-          class="rounded-full w-5/12 text-center font-medium"
-        />
+        <form @submit.prevent="submitAnswer" class="w-full flex justify-center">
+          <input
+            v-model="reponse"
+            type="text"
+            class="rounded-full w-5/12 text-center font-medium"
+          />
+        </form>
       </div>
     </div>
     <div class="col-span-2 flex flex-col bg-black-400 px-5 py-5">
       <div class="flex-grow h-52 overflow-y-auto mb-5 space-y-5 hide-scroll">
         <div
-          v-for="message in chat"
-          :key="message"
+          v-for="(message, i) in chat"
+          :key="message.author + i"
           class="flex"
           :class="message.author == username ? 'justify-end' : ''"
         >
@@ -49,8 +52,37 @@
         </div>
       </div>
       <div class="relative flex items-center justify-end">
-        <svg @click="sendMessage()" class="w-7 h-7 absolute right-2 cursor-pointer rounded-lg transition duration-500 hover:bg-black-50 hover:bg-opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 5l7 7-7 7M5 5l7 7-7 7"></path></svg>
-        <input class="px-4 py-1 w-full rounded-lg pr-10" v-model="message" />
+        <form @submit.prevent="sendMessage" class="flex items-center">
+          <button
+            type="submit"
+            class="
+              absolute
+              right-2
+              cursor-pointer
+              rounded-lg
+              transition
+              duration-500
+              hover:bg-black-50 hover:bg-opacity-50
+            "
+          >
+            <svg
+              class="w-7 h-7"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M13 5l7 7-7 7M5 5l7 7-7 7"
+              ></path>
+            </svg>
+          </button>
+
+          <input class="px-4 py-1 w-full rounded-lg pr-10" v-model="message" />
+        </form>
       </div>
     </div>
   </div>
@@ -66,6 +98,14 @@ export default {
   },
   components: {
     Timer,
+  },
+  methods: {
+    submitAnswer() {
+      this.reponse = "";
+    },
+    sendMessage() {
+      this.message = "";
+    },
   },
   data() {
     return {
@@ -117,6 +157,7 @@ export default {
         },
       ],
       reponse: "",
+      message: "",
       answer: "Mickey",
     };
   },
