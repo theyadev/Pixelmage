@@ -52,7 +52,7 @@
             _ _ _&nbsp;&nbsp;_ _ _&nbsp;&nbsp;_ _
           </div>
         </div>
-        <img src="/testimg.jpg" class="w-8/12 rounded-lg" />
+        <img :src="image" class="w-8/12 rounded-lg" />
         <form @submit.prevent="submitAnswer" class="w-full flex justify-center">
           <input
             v-model="reponse"
@@ -65,7 +65,7 @@
     <div
       class="md:col-span-6 lg:col-span-2 flex flex-col bg-black-400 px-5 py-5"
     >
-      <div class="flex-grow h-80 overflow-y-auto mb-5 space-y-5 hide-scroll">
+      <div class="flex-grow h-80 overflow-y-auto mb-5 space-y-5 hide-scroll" id="chat">
         <div
           v-for="(message, i) in chat"
           :key="message.author + i"
@@ -145,7 +145,18 @@ export default {
     });
 
     this.socket.on("CHAT", (chat) => {
+      // Update chat
       this.chat = chat
+
+      // Scroll at the end of the chat
+      const chatDiv = document.getElementById("chat");
+      chatDiv.scrollTop = chatDiv.scrollHeight;
+    })
+
+    this.socket.on("STARTROUND", (image) => {
+      // Tu veux pas push je teste sur mon pc xD Oui xDDDDDDDDD
+      console.log(image)
+      this.image = image
     })
 
     this.socket.emit("UPDATE", {
@@ -180,6 +191,7 @@ export default {
       max: 10,
       users: null,
       chat: null,
+      image: null,
       reponse: "",
       message: "",
       answer: "Mickey",
@@ -191,5 +203,8 @@ export default {
 <style>
 .hide-scroll::-webkit-scrollbar {
   display: none;
+}
+.hide-scroll{
+  scroll-behavior: auto;
 }
 </style>
