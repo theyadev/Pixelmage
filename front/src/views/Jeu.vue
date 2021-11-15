@@ -1,7 +1,45 @@
 <template>
-  <div class="grid grid-cols-8 h-full">
-    <div class="bg-red-400"></div>
-    <div class="col-span-5 bg-black-600">
+  <div class="grid grid-cols-1 md:grid-cols-8 h-full">
+    <div
+      class="
+        md:row-span-2
+        md:col-span-2
+        lg:col-span-1
+        lg:row-span-1
+        bg-red-400
+        flex flex-col
+        items-center
+        space-y-4
+        py-5
+        px-2
+      "
+    >
+      <div
+      
+        v-for="user in users"
+        :key="user.username"
+        class="py-2 px-6 bg-white rounded w-full flex flex-col items-center"
+      >
+        <div class="flex items-center space-x-1">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-5 w-5"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
+              clip-rule="evenodd"
+            />
+          </svg>
+          <span>{{ user.username }}</span>
+        </div>
+        {{ user.score }} points
+        <!-- -->
+      </div>
+    </div>
+    <div class="md:col-span-6 lg:col-span-5 bg-black-600 pb-10 lg:pb-0">
       <div class="flex flex-col items-center justify-center pt-5 space-y-8">
         <div class="relative flex items-center">
           <Timer
@@ -24,8 +62,10 @@
         </form>
       </div>
     </div>
-    <div class="col-span-2 flex flex-col bg-black-400 px-5 py-5">
-      <div class="flex-grow h-52 overflow-y-auto mb-5 space-y-5 hide-scroll">
+    <div
+      class="md:col-span-6 lg:col-span-2 flex flex-col bg-black-400 px-5 py-5"
+    >
+      <div class="flex-grow h-80 overflow-y-auto mb-5 space-y-5 hide-scroll">
         <div
           v-for="(message, i) in chat"
           :key="message.author + i"
@@ -92,6 +132,25 @@
 import Timer from "../components/Timer.vue";
 export default {
   mounted() {
+    this.socket.on("UPDATED", (room) => {
+      // TODO: Verifier si le sort marche xD
+
+      function sortThing(a, b) {
+        return a.score - b.score
+      }
+
+      this.users = room.users.sort(sortThing)
+
+      this.chat = room.chat
+    });
+
+    this.socket.on("CHAT", (chat) => {
+      this.chat = chat
+    })
+
+    this.socket.emit("UPDATE", {
+      id: parseInt(this.id),
+    });
     //   socket.on('UPDATETIME', (currentTime) => {
     //       this.current = currentTime
     //   })
@@ -104,58 +163,23 @@ export default {
       this.reponse = "";
     },
     sendMessage() {
+      this.socket.emit("MESSAGE", {
+        id: this.id,
+        username: this.username,
+        message : this.message
+        })
       this.message = "";
     },
   },
   data() {
     return {
-      username: "Dark",
+      socket: this.$store.state.socket,
+      id: parseInt(this.$route.query.id),
+      username: this.$store.state.username,
       current: 0,
       max: 10,
-      chat: [
-        {
-          author: "Theya",
-          date: "",
-          content: "Zboub de bois",
-        },
-        {
-          author: "Dark",
-          date: "",
-          content: "Pipo le iench il est trop cool !",
-        },
-        {
-          author: "Dark",
-          date: "",
-          content:
-            "Pipo le iench il est trop cool mais vraiment trop trop trop cool je le kiffe trop ce petit chien !",
-        },
-        {
-          author: "Theya",
-          date: "",
-          content: "aaaaaaaaaaaaaaaaaaaaaa j'ai besoin d'aide je trouve pas",
-        },
-        {
-          author: "Theya",
-          date: "",
-          content: "Zboub de bois",
-        },
-        {
-          author: "Dark",
-          date: "",
-          content: "Pipo le iench il est trop cool !",
-        },
-        {
-          author: "Dark",
-          date: "",
-          content:
-            "Pipo le iench il est trop cool mais vraiment trop trop trop cool je le kiffe trop ce petit chien !",
-        },
-        {
-          author: "Theya",
-          date: "",
-          content: "aaaaaaaaaaaaaaaaaaaaaa j'ai besoin d'aide je trouve pas",
-        },
-      ],
+      users: null,
+      chat: null,
       reponse: "",
       message: "",
       answer: "Mickey",

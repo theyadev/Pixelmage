@@ -25,7 +25,17 @@ io.on("connection", function (socket) {
    * @param {string} id
    */
   function update(id) {
-    io.sockets.in(id).emit("UPDATED", Rooms.get(id));
+    const room = Rooms.get(id)
+
+    io.sockets.in(id).emit("UPDATED", {
+      id: room.id,
+      users: room.users,
+      category: room.category,
+      currentRound: room.currentRound,
+      maxRounds: room.maxRounds,
+      chat: room.chat,
+      started: room.started,
+    });
   }
 
   socket.on("CREATE", function (data) {
@@ -41,17 +51,17 @@ io.on("connection", function (socket) {
           username: data.name,
           score: 0,
           host: true,
-          // answerStatus: false,
+          // answered: false,
         },
       ],
       category: "Anime",
+      currentRound: 1,
       maxRounds: 5,
-      // chat: [],
+      chat: [],
+      images: [],
       // pixelisationStatus: 0,
-      // currentImage: 0,
       // answer: "",
       started: false,
-      // currentRound: 1,
       // alreadyUsedImages: [],
     });
 
@@ -165,7 +175,23 @@ io.on("connection", function (socket) {
     console.log("STARTING");
 
     Rooms.get(data.id).started = true
+
+    Rooms.get(data.id).images = [
+      "https://pokemonletsgo.pokemon.com/assets/img/common/char-pikachu.png", "https://pokemonletsgo.pokemon.com/assets/img/common/char-pikachu.png"
+    ]
+
     update(data.id)
+  })
+
+  socket.on("MESSAGE", function (data) {
+    const message = {
+      author: data.username,
+      content: data.message,
+      date: new Date()
+    }
+    Rooms.get(data.id).chat.push(message)
+
+    io.sockets.in(data.id).emit("CHAT", Rooms.get(data.id).chat)
   })
 
 });
