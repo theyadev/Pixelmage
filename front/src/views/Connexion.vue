@@ -1,10 +1,10 @@
 <template>
-  <div class="flex flex-col flex-grow items-center">
-    <h1 class="mt-10 mb-10 text-5xl text-white">Pixelmage</h1>
+  <div class="grid grid-cols-1 lg:grid-cols-3">
+    <div class="lg:col-start-2 flex flex-col items-center">
+    <h1 class="mt-10 mb-10 text-5xl text-white">Pixelmage</h1> 
     <div
       class="
         relative
-        w-1/4
         rounded-2xl
         shadow-xl
         bg-black-700
@@ -48,6 +48,7 @@
           >Créer une salle</span
         >
       </button>
+    </div>
     </div>
   </div>
 </template>
