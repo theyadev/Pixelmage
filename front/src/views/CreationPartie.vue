@@ -53,29 +53,6 @@
             >Démarrer la partie</span
           >
         </button>
-        <!-- <input
-          type="text"
-          :value="'localhost:8080/?id=' + id"
-          disabled
-          class="
-            text-red-600
-            ring-red-600 ring-1
-            relative
-            shadow-md
-            px-5
-            py-1
-            bg-black-800
-            rounded-full
-            transition
-            duration-500
-            focus:ring
-            focus-within:ring-opacity-50
-            focus:shadow-lg
-            flex
-            justify-center
-            cursor-text
-          "
-        /> -->
         <button
           class="ring-green-700 btn flex justify-center"
           @click="copyLink"
@@ -127,9 +104,9 @@ export default {
 
     this.socket.on("UPDATED", (room) => {
       if (room.started == true) {
-        this.socket.off("UPDATED")
+        this.socket.off("UPDATED");
         this.$router.push({ path: "/game", query: { id: room.id } });
-        return
+        return;
       }
 
       let users = room.users;
@@ -152,12 +129,11 @@ export default {
 
     this.socket.emit("UPDATE", {
       id: parseInt(this.id),
-    }); 
+    });
   },
   beforeRouteLeave(to, from, next) {
     if (to.name != "Jeu") this.quit();
 
-    
     next();
   },
   destroyed() {
