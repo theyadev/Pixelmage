@@ -154,9 +154,8 @@ export default {
     })
 
     this.socket.on("STARTROUND", (image) => {
-      // Tu veux pas push je teste sur mon pc xD Oui xDDDDDDDDD
-      console.log(image)
-      this.image = image
+      
+      this.image = image.toString()
     })
 
     this.socket.emit("UPDATE", {
@@ -191,7 +190,7 @@ export default {
       max: 10,
       users: null,
       chat: null,
-      image: null,
+      image: "",
       reponse: "",
       message: "",
       answer: "Mickey",

@@ -97,7 +97,6 @@ export default {
     window.addEventListener("beforeunload", this.handleRefresh);
   },
   mounted() {
-    console.log(this.$store.state.username);
     if (this.$store.state.username == null) {
       this.$router.push({ path: "/" });
     }
@@ -158,7 +157,6 @@ export default {
     },
     quit() {
       if (this.$store.state.username) {
-        console.log("PAGE REFRESH");
         this.socket.emit("LEAVE", {
           name: this.$store.state.username,
           id: this.id,

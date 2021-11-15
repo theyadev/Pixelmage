@@ -84,7 +84,6 @@ export default {
       this.$router.push({ path: "/create", query: { id: id } });
     },
     createGame() {
-      console.log(this.username);
       if (this.notValidUsername()) {
         return this.$toasted.error("Username too short !", {
           theme: "toasted-primary",

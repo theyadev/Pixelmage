@@ -14,11 +14,7 @@ new Vue({
   store,
   watch:{
     '$route' (to, from){
-      console.log(`From: ${from.name} vers: ${to.name}`);
-      console.log(store.state.username)
-       if (to.name == "Connexion" && from.name == "Creation Partie" && store.state.username) {
-         console.log("QUITTER");
-         
+       if (to.name == "Connexion" && from.name == "Creation Partie" && store.state.username) {   
          store.state.socket.emit('LEAVE')
          store.state.username = null
        }
