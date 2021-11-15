@@ -39,6 +39,22 @@
             <option v-for="i in 6" :key="i">{{ i + 4 }}</option>
           </select>
         </div>
+        
+        <div class="flex items-center">
+          <button @click="previousColorIndex">
+            <svg xmlns="http://www.w3.org/2000/svg" class="text-white h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+            </svg>
+          </button>
+
+          <div class="h-5 w-5 rounded-full" :style="'background-color:#' + colors[colorIndexSelected]"></div>
+
+          <button @click="nextColorIndex">
+            <svg xmlns="http://www.w3.org/2000/svg" class="text-white h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            </svg>
+          </button>
+        </div>
         <button
           :disabled="!host"
           class="
@@ -147,6 +163,9 @@ export default {
       host: false,
       category: "Anime",
       maxRounds: 5,
+      colors : ["FF0000", "FF3E00", "FFD800", "1FFF00", "00FFCD", "009BFF", "004DFF", "0008FF", "6400FF", "C500FF", 
+          "FB71C3", "D57700", "BEE800", "016A23", "12003D", "3D0038", "4C0000", "F09761", "4F4640", "9AA4CA"],
+      colorIndexSelected : 0
     };
   },
   methods: {
@@ -188,6 +207,31 @@ export default {
     startGame() {
       this.socket.emit("START", { id: this.id });
     },
+    emitChangeColorInServer(){
+      this.socket.emit("CHANGE COLOR", {
+          id: this.id,
+          name: this.$store.state.username,
+          color: this.colors[this.colorIndexSelected]
+        })
+    },
+    nextColorIndex(){
+      if (this.colorIndexSelected<this.colors.length){
+        this.colorIndexSelected++
+      }
+      else{
+        this.colorIndexSelected=0
+      } 
+      this.emitChangeColorInServer()     
+    },
+    previousColorIndex(){
+      if (this.colorIndexSelected>0){
+        this.colorIndexSelected--
+      }
+      else{
+        this.colorIndexSelected=this.colors.length-1
+      } 
+      this.emitChangeColorInServer()         
+    }
   },
 };
 </script>

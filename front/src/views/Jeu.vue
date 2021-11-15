@@ -87,6 +87,7 @@
                   ? 'bg-white rounded-bl-2xl'
                   : 'bg-pink-500 rounded-br-2xl'
               "
+              :style="'background-color:'+ getColor(message.author)"
             >
               {{ message.content }}
             </div>
@@ -219,6 +220,11 @@ export default {
       });
       this.message = "";
     },
+    getColor(username){
+      const index = this.users.findIndex((e) => e.username == username);
+      return "#" + this.users[index].color
+      
+    }
   },
   data() {
     return {
