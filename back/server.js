@@ -169,16 +169,25 @@ io.on("connection", function (socket) {
     update(data.id);
   });
 
+  function startRound(id) {
+    const currentRoundImageIndex = Rooms.get(id).currentRound - 1
+
+    io.sockets.in(id).emit("STARTROUND", Rooms.get(id).images[currentRoundImageIndex])
+  }
+
   socket.on("START", function (data){
     if (!data.id) return
     
     console.log("STARTING");
 
     Rooms.get(data.id).started = true
+    
+    for (let i = 0; i < Rooms.get(data.id).maxRounds; i++) {
+      // TODO: Mettre des images aléatoires, sans duplicate
+      Rooms.get(data.id).images.push("https://pokemonletsgo.pokemon.com/assets/img/common/char-pikachu.png")
+    }
 
-    Rooms.get(data.id).images = [
-      "https://pokemonletsgo.pokemon.com/assets/img/common/char-pikachu.png", "https://pokemonletsgo.pokemon.com/assets/img/common/char-pikachu.png"
-    ]
+    startRound(data.id)
 
     update(data.id)
   })
