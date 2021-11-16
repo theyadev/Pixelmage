@@ -41,7 +41,7 @@
         <div class="relative flex items-center">
           <Timer
             :max="max"
-            :current="max-current"
+            :current="max - current"
             class="absolute -left-48 top-1 w-14 h-14"
           />
           <div class="text-white font-bold text-5xl">
@@ -87,7 +87,7 @@
                   ? 'bg-white rounded-bl-2xl'
                   : 'bg-pink-500 rounded-br-2xl'
               "
-              :style="'background-color:'+ getColor(message.author)"
+              :style="'background-color:' + getColor(message.author)"
             >
               {{ message.content }}
             </div>
@@ -148,7 +148,7 @@ export default {
 
       this.image = room.image;
 
-      this.max = room.maxTime
+      this.max = room.maxTime;
     });
 
     this.socket.on("CHAT", (chat) => {
@@ -165,9 +165,12 @@ export default {
     });
 
     this.socket.on("UPDATE TIMER", (currentTime) => {
-      console.log(currentTime);
-
       this.current = currentTime;
+    });
+
+    this.socket.once("QUIT TO LOBBY", () => {
+      console.log("QUITTER");
+      this.$router.push({ path: "/create", query: { id: this.id } });
     });
   },
   components: {
@@ -204,10 +207,6 @@ export default {
         this.socket.off("GOOD ANSWER");
       });
 
-      this.socket.once("QUIT TO LOBBY", () =>{
-        this.$router.push({ path: "/create", query: { id: this.id } });
-      })
-
       this.socket.emit("ANSWER", {
         id: this.id,
         name: this.username,
@@ -224,11 +223,10 @@ export default {
       });
       this.message = "";
     },
-    getColor(username){
+    getColor(username) {
       const index = this.users.findIndex((e) => e.username == username);
-      return "#" + this.users[index].color
-      
-    }
+      return "#" + this.users[index].color;
+    },
   },
   data() {
     return {
