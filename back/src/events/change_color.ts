@@ -1,5 +1,5 @@
 import { Socket } from "socket.io";
-import { Room } from "../types/types";
+import { Room } from "../types";
 
 import getUserIndex from "../functions/getUserIndex";
 

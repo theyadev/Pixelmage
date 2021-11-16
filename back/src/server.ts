@@ -1,6 +1,6 @@
 import { Socket, Server } from "socket.io";
 
-import { Room } from "./types/types";
+import { Room } from "./types";
 
 import express from "express";
 import helmet from "helmet";

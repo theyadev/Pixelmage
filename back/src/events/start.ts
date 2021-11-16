@@ -1,5 +1,5 @@
 import { Socket } from "socket.io";
-import { Room } from "../types/types";
+import { Room } from "../types";
 
 import update from "../functions/update";
 import resetAnswer from "../functions/resetAnswer";

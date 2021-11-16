@@ -1,5 +1,5 @@
 import { Socket } from "socket.io";
-import { Room } from "../types/types";
+import { Room } from "../types";
 
 export default function Join(socket: Socket, Rooms: Map<number, Room>) {
   /**

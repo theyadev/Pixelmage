@@ -1,4 +1,4 @@
-import { Room } from "../types/types";
+import { Room } from "../types";
 
 /**
  * Return an User index from a room
