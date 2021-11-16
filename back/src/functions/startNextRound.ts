@@ -30,15 +30,15 @@ export function endRound(io: any, room: Room) {
     io.sockets.in(room.id).emit("UPDATE TIMER", i);
 
     if (i >= room.maxTime) {
-      room.currentRound++;
-
       clearInterval(interval);
+
+      room.currentRound++;
 
       resetAnswer(room);
 
       update(io, room);
 
-      if (room.maxRounds <= room.currentRound) {
+      if (room.maxRounds <= room.currentRound - 1) {
         resetRoom(room);
         resetScore(room);
 
@@ -47,7 +47,7 @@ export function endRound(io: any, room: Room) {
         return io.sockets.in(room.id).emit("QUIT TO LOBBY");
       } else {
         console.log(`${room.id} -> ROUND SUIVANT !`);
-        
+
         startNextRound(io, room);
       }
     }
