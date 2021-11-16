@@ -1,7 +1,8 @@
 export type Answer = {
-  image: string;
-  name: string;
+  url: string;
+  answer: string;
   aliases: string[];
+  category: string;
 };
 
 export type Message = {

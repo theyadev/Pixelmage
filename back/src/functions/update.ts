@@ -15,6 +15,6 @@ export default function update(io: any, room: Room) {
     maxTime: room.maxTime,
     chat: room.chat,
     started: room.started,
-    image: room.answers[currentRoundImageIndex]?.image,
+    image: room.answers[currentRoundImageIndex]?.url,
   });
 }

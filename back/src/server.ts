@@ -1,9 +1,11 @@
+import express from "express";
+import helmet from "helmet";
+
 import { Socket, Server } from "socket.io";
 
 import { Room } from "./types";
 
-import express from "express";
-import helmet from "helmet";
+import { query } from "./db"
 
 import Answer from "./events/answer";
 import ChangeColor from "./events/change_color";
