@@ -20,7 +20,7 @@ export default function Leave(
     // If room doesn't exist
     if (!room) return;
 
-    console.log("LEAVING");
+    console.log(`${room.id} -> ${data.name} -> LEAVING !`);
 
     // Get the index of the user who is quitting
     const index = getUserIndex(room, data.id, data.name);

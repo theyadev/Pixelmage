@@ -18,7 +18,7 @@ export default function UpdateCategory(
 
     if (!room) return;
 
-    console.log("UPDATE CATEGORY");
+    console.log(`${room.id} -> UPDATE CATEGORY !`);
 
     room.category = data.category;
 

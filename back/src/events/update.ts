@@ -14,12 +14,12 @@ export default function Update(
   socket.on("UPDATE", function (data) {
     if (!data.id) return;
 
-    console.log("UPDATING");
-
     const room = Rooms.get(data.id);
-
+    
     // If room doesn't exist
     if (!room) return;
+
+    console.log(`${room.id} -> UPDATING PLAYERS !`);
 
     update(io, room);
   });

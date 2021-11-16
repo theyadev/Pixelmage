@@ -8,8 +8,6 @@ export default function Join(socket: Socket, Rooms: Map<number, Room>) {
   socket.on("JOIN", function (data) {
     if (!data.id || !data.name) return;
 
-    console.log("JOINING");
-
     const room = Rooms.get(data.id);
 
     // If room doesn't exist
@@ -18,6 +16,8 @@ export default function Join(socket: Socket, Rooms: Map<number, Room>) {
         error: "Game doesn't exist !",
       });
     }
+
+    console.log(`${room.id} -> ${data.name} -> JOINING !`);
 
     // If username already in the room
     if (room.users.some((user) => user.username == data.name)) {

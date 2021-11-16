@@ -8,7 +8,7 @@ export default function Create(socket: Socket, Rooms: Map<number, Room>) {
   socket.on("CREATE", function (data) {
     if (!data.id || !data.name) return;
 
-    console.log("CREATING");
+    console.log(`${data.id} -> CREATING !`);
 
     // Initialize the room and add the creator to it
     Rooms.set(data.id, {

@@ -21,7 +21,7 @@ export default function Start(
 
     if (!room) return;
 
-    console.log("STARTING");
+    console.log(`${room.id} -> STARTING !`);
 
     resetAnswer(room);
 

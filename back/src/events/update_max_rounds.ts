@@ -14,11 +14,11 @@ export default function UpdateMaxRounds(
   socket.on("UPDATE MAX ROUNDS", function (data) {
     if (!data.maxRounds || !data.id) return;
 
-    console.log("UPDATE MAX ROUNDS");
-
     const room = Rooms.get(data.id);
 
     if (!room) return;
+
+    console.log(`${room.id} -> UPDATE MAX ROUNDS !`);
 
     room.maxRounds = data.maxRounds;
     update(io, room);
