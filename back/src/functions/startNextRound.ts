@@ -27,8 +27,7 @@ export default function startNextRound(io: any, room: Room) {
 
 export function endRound(io: any, room: Room){
   let i = 0;
-  const maxTimeAnswer = 2;
-
+  
   let interval = setInterval(() => {
     i += 0.25;
 
