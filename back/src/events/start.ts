@@ -2,7 +2,7 @@ import { Socket } from "socket.io";
 import { Room, Answer } from "../types";
 
 import update from "../functions/update";
-import resetAnswer from "../functions/resetAnswer";
+import { resetAnswer } from "../functions/resets";
 import startNextRound from "../functions/startNextRound";
 import { query } from "../db";
 
@@ -16,7 +16,6 @@ export default function Start(
    */
   socket.on("START", async function (data) {
     if (!data.id) return;
-
 
     const room = Rooms.get(data.id);
 
