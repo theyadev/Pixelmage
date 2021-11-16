@@ -36,7 +36,7 @@
             class="rounded-full py-1"
             @change="updateGameMaxRounds($event)"
           >
-            <option v-for="i in 6" :key="i">{{ i + 4 }}</option>
+            <option v-for="i in 6" :key="i">{{ i }}</option>
           </select>
         </div>
         

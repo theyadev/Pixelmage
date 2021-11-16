@@ -204,6 +204,10 @@ export default {
         this.socket.off("GOOD ANSWER");
       });
 
+      this.socket.once("QUIT TO LOBBY", () =>{
+        this.$router.push({ path: "/create", query: { id: this.id } });
+      })
+
       this.socket.emit("ANSWER", {
         id: this.id,
         name: this.username,

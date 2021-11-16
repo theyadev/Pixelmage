@@ -5,7 +5,6 @@ import { Socket, Server } from "socket.io";
 
 import { Room } from "./types";
 
-import { query } from "./db"
 
 import Answer from "./events/answer";
 import ChangeColor from "./events/change_color";

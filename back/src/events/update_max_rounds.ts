@@ -21,7 +21,6 @@ export default function UpdateMaxRounds(
     if (!room) return;
 
     room.maxRounds = data.maxRounds;
-
     update(io, room);
   });
 }

@@ -17,6 +17,7 @@ export default function Start(
   socket.on("START", async function (data) {
     if (!data.id) return;
 
+
     const room = Rooms.get(data.id);
 
     if (!room) return;
