@@ -19,10 +19,8 @@ export default function Answer(
 
     const currentRoundImageIndex = room.currentRound - 1;
     if (
-      data.answer.toLowerCase() == room.answers[currentRoundImageIndex].name ||
-      room.answers[currentRoundImageIndex].aliases.includes(
-        data.answer.toLowerCase()
-      )
+      data.answer.toLowerCase() == room.answers[currentRoundImageIndex].answer.toLowerCase() ||
+      room.answers[currentRoundImageIndex].aliases?.some(e => e.toLowerCase() == data.answer.toLowerCase())
     ) {
       const index = getUserIndex(room, data.id, data.name);
 
