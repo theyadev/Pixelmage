@@ -27,10 +27,9 @@ export default function Create(socket: Socket, Rooms: Map<number, Room>) {
       maxRounds: 5,
       maxTime: 10,
       chat: [],
-      // pixelisationStatus: 0,
       answers: [],
       started: false,
-      // alreadyUsedImages: [],
+      currentTime: 0
     });
 
     socket.join(data.id);
