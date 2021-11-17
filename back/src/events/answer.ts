@@ -19,10 +19,10 @@ export default function Answer(
 
     const currentRoundImageIndex = room.currentRound - 1;
     if (
-      data.answer.toLowerCase() ==
-        room.answers[currentRoundImageIndex].answer.toLowerCase() ||
+      data.answer.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase() ==
+        room.answers[currentRoundImageIndex].answer.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase() ||
       room.answers[currentRoundImageIndex].aliases?.some(
-        (e) => e.toLowerCase() == data.answer.toLowerCase()
+        (e) => e.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase() == data.answer.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase()
       )
     ) {
       const index = getUserIndex(room, data.id, data.name);
