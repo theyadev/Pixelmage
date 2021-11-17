@@ -1,5 +1,5 @@
 import { Socket } from "socket.io";
-import { Room, Answer } from "../types";
+import { Room } from "../types";
 
 import update from "../functions/update";
 import { resetAnswer } from "../functions/resets";
@@ -23,7 +23,7 @@ export default function Start(
 
     console.log(`${room.id} -> STARTING !`);
 
-    resetAnswer(room);
+    resetAnswer(room, false);
 
     room.started = true;
 

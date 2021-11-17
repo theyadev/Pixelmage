@@ -3,10 +3,11 @@ import { Room } from "../types";
 /**
  * Reset all User answered in a room
  */
-export function resetAnswer(room: Room) {
+export function resetAnswer(room: Room, value: boolean) {
   for (let i = 0; i < room.users.length; i++) {
-    room.users[i].answered = false;
+    room.users[i].answered = value;
   }
+
 }
 
 export function resetScore(room: Room) {
