@@ -27,8 +27,7 @@ export type Room = {
   maxRounds: number;
   maxTime: number;
   chat: Message[];
-  // pixelisationStatus: number,
   answers: Answer[];
   started: boolean;
-  // alreadyUsedImages: Answer[],
+  currentTime: number;
 };
