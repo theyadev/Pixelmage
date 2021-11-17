@@ -3,6 +3,11 @@ import { Room } from "../types";
 import update from "./update";
 import { resetAnswer, resetScore, resetRoom } from "./resets";
 
+
+function everyoneAnswered(room: Room) {
+  return room.users.every(e => e.answered)
+}
+
 /**
  * Start the timer and round in a room
  */
@@ -12,7 +17,15 @@ export default function startNextRound(io: any, room: Room) {
   let interval = setInterval(() => {
     i += 0.1;
 
+    room.currentTime = i
+
     io.sockets.in(room.id).emit("UPDATE TIMER", i);
+
+    if (everyoneAnswered(room)) {
+      clearInterval(interval);
+      endRound(io, room);
+      return
+    }
 
     if (i >= room.maxTime) {
       clearInterval(interval);
@@ -24,17 +37,21 @@ export default function startNextRound(io: any, room: Room) {
 export function endRound(io: any, room: Room) {
   let i = 0;
 
-  let interval = setInterval(() => {
-    i += 0.25;
+  resetAnswer(room, true)
 
-    io.sockets.in(room.id).emit("UPDATE TIMER", i);
+  update(io, room)
+
+  let interval = setInterval(() => {
+    i += room.maxTime / 50 ;
+
+    io.sockets.in(room.id).emit("UPDATE TIMER", i, true);
 
     if (i >= room.maxTime) {
       clearInterval(interval);
 
       room.currentRound++;
 
-      resetAnswer(room);
+      resetAnswer(room, false);
 
       update(io, room);
 
