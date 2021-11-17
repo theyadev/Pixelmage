@@ -4,7 +4,7 @@ import update from "./update";
 import { resetAnswer, resetScore, resetRoom } from "./resets";
 
 
-function everyoneAnswered(room: Room) {
+export function everyoneAnswered(room: Room) {
   return room.users.every(e => e.answered)
 }
 
