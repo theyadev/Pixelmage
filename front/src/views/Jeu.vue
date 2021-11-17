@@ -48,10 +48,16 @@
             _ _ _&nbsp;&nbsp;_ _ _&nbsp;&nbsp;_ _
           </div>
         </div>
-        <img
-          :src="image"
+        <div class="flex justify-center">
+        <canvas
+          id="canvas"
           class="w-8/12 rounded-lg object-contain lg:max-h-96"
         />
+        <canvas
+          id="canvasInvisible"
+          class="w-8/12 rounded-lg object-contain lg:max-h-96 hidden"
+        />
+        </div>
         <form @submit.prevent="submitAnswer" class="w-full flex justify-center">
           <input
             v-model="reponse"
@@ -134,7 +140,13 @@
 <script>
 import Timer from "../components/Timer.vue";
 export default {
+  created() {
+    window.addEventListener("beforeunload", this.handleRefresh);
+  },
   mounted() {
+    if (this.$store.state.username == null) {
+      this.$router.push({ path: "/" });
+    }
     this.socket.on("UPDATED", (room) => {
       // TODO: Verifier si le sort marche
 
@@ -164,8 +176,18 @@ export default {
       id: parseInt(this.id),
     });
 
-    this.socket.on("UPDATE TIMER", (currentTime) => {
+    this.socket.on("UPDATE TIMER", (currentTime, finished = false) => {
       this.current = currentTime;
+
+      const img = new Image();
+
+      img.src = this.image;
+
+      if (finished) {
+        this.pixelate(img, 1, true);
+      } else {
+        this.pixelate(img, (this.current / this.max) * 5 + 1 );
+      }
     });
 
     this.socket.once("QUIT TO LOBBY", () => {
@@ -177,6 +199,46 @@ export default {
     Timer,
   },
   methods: {
+    pixelate(image, scale, finished = false) {
+      if (!finished) {
+        scale *= 0.01;
+      }
+
+      var canvas2 = document.getElementById("canvasInvisible");
+      var canvas = document.getElementById("canvas");
+
+      canvas.width = image.width;
+      canvas.height = image.height;
+
+      canvas2.width = image.width;
+      canvas2.height = image.height;
+
+      var scaledW = canvas.width * scale;
+      var scaledH = canvas.height * scale;
+
+      var ctx = canvas.getContext("2d");
+      var ctx2 = canvas2.getContext("2d");
+
+      ctx.mozImageSmoothingEnabled = false;
+      ctx.webkitImageSmoothingEnabled = false;
+      ctx.imageSmoothingEnabled = false;
+
+      ctx2.clearRect(0, 0, scaledW, scaledH);
+      ctx2.drawImage(image, 0, 0, scaledW, scaledH);
+
+      ctx.clearRect(0, 0, scaledW, scaledH);
+      ctx.drawImage(
+        canvas2,
+        0,
+        0,
+        scaledW,
+        scaledH,
+        0,
+        0,
+        image.width,
+        image.height
+      );
+    },
     submitAnswer() {
       const index = this.users.findIndex((e) => e.username == this.username);
 
@@ -227,6 +289,23 @@ export default {
       const index = this.users.findIndex((e) => e.username == username);
       return "#" + this.users[index].color;
     },
+    handleRefresh(event) {
+      this.quit();
+      event.stopImmediatePropagation();
+      event.preventDefault();
+    },
+    quit() {
+      if (this.$store.state.username) {
+        this.socket.emit("LEAVE", {
+          name: this.$store.state.username,
+          id: this.id,
+        });
+        this.$store.state.username = null;
+      }
+    },
+  },
+  destroyed() {
+    window.removeEventListener("beforeunload", this.handleRefresh);
   },
   data() {
     return {
@@ -234,7 +313,7 @@ export default {
       id: parseInt(this.$route.query.id),
       username: this.$store.state.username,
       current: 0,
-      max: 10,
+      max: 60,
       users: null,
       chat: null,
       image: "",
