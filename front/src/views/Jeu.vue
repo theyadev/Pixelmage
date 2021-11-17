@@ -45,7 +45,7 @@
             class="absolute -left-48 top-1 w-14 h-14"
           />
           <div class="text-white font-bold text-5xl">
-            _ _ _&nbsp;&nbsp;_ _ _&nbsp;&nbsp;_ _
+           {{ hiddenAnswer }}
           </div>
         </div>
         <div class="flex justify-center">
@@ -161,6 +161,8 @@ export default {
       this.image = room.image;
 
       this.max = room.maxTime;
+
+      this.hiddenAnswer = room.answer
     });
 
     this.socket.on("CHAT", (chat) => {
@@ -320,6 +322,7 @@ export default {
       reponse: "",
       message: "",
       answer: "",
+      hiddenAnswer: ""
     };
   },
 };

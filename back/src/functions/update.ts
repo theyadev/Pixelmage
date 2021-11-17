@@ -1,10 +1,17 @@
 import { Room } from "../types";
+import { everyoneAnswered } from "./startNextRound";
+
+function formatAnswer(text: string) {
+  return text.replace("_", " ").normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(" ", "\xa0").replace(/[a-zA-Z0-9]/g, " _ ")
+}
 
 /**
  * Send room information to every room's user
  */
 export default function update(io: any, room: Room) {
   const currentRoundImageIndex = room.currentRound - 1;
+
+  const currentAnswer = room.answers[currentRoundImageIndex]
 
   io.sockets.in(room.id).emit("UPDATED", {
     id: room.id,
@@ -15,6 +22,7 @@ export default function update(io: any, room: Room) {
     maxTime: room.maxTime,
     chat: room.chat,
     started: room.started,
-    image: room.answers[currentRoundImageIndex]?.url,
+    answer: currentAnswer ? everyoneAnswered(room) ? currentAnswer.answer : formatAnswer(currentAnswer.answer) : "",
+    image: currentAnswer?.url,
   });
 }
