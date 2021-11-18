@@ -40,7 +40,7 @@ function calculateScore(currentTime: number, maxTime: number) {
   );
 }
 
-export default function Answer(
+export default function EventAnswer(
   io: any,
   socket: Socket,
   Rooms: Map<number, Room>
