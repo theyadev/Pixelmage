@@ -31,6 +31,8 @@ export default function Leave(
     // Remove the user from the room
     const user = room.users.splice(index, 1)[0];
 
+    socket.leave(data.id)
+
     // If the leaving user is host, pass the host to the next player
     if (user.host == true) {
       // Is there's no one in the room, close the game

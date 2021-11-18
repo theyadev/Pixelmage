@@ -160,7 +160,11 @@ export default {
 
       this.chat = room.chat;
 
-      this.image = room.image;
+      const img = new Image();
+
+      img.src = room.image;
+
+      this.image = img;
 
       this.max = room.maxTime;
 
@@ -183,14 +187,10 @@ export default {
     this.socket.on("UPDATE TIMER", (currentTime, finished = false) => {
       this.current = currentTime;
 
-      const img = new Image();
-
-      img.src = this.image;
-
       if (finished) {
-        this.pixelate(img, 1, true);
+        this.pixelate(1, true);
       } else {
-        this.pixelate(img, (this.current / this.max) * 5 + 1);
+        this.pixelate((this.current / this.max) * 2 + 0.2);
       }
     });
 
@@ -203,7 +203,7 @@ export default {
     Timer,
   },
   methods: {
-    pixelate(image, scale, finished = false) {
+    pixelate(scale, finished = false) {
       if (!finished) {
         scale *= 0.01;
       }
@@ -211,11 +211,11 @@ export default {
       var canvas2 = document.getElementById("canvasInvisible");
       var canvas = document.getElementById("canvas");
 
-      canvas.width = image.width;
-      canvas.height = image.height;
+      canvas.width = this.image.width;
+      canvas.height = this.image.height;
 
-      canvas2.width = image.width;
-      canvas2.height = image.height;
+      canvas2.width = this.image.width;
+      canvas2.height = this.image.height;
 
       var scaledW = canvas.width * scale;
       var scaledH = canvas.height * scale;
@@ -227,8 +227,10 @@ export default {
       ctx.webkitImageSmoothingEnabled = false;
       ctx.imageSmoothingEnabled = false;
 
+      if (this.image.height == 0 || this.image.width == 0) return;
+
       ctx2.clearRect(0, 0, scaledW, scaledH);
-      ctx2.drawImage(image, 0, 0, scaledW, scaledH);
+      ctx2.drawImage(this.image, 0, 0, scaledW, scaledH);
 
       ctx.clearRect(0, 0, scaledW, scaledH);
       ctx.drawImage(
@@ -239,8 +241,8 @@ export default {
         scaledH,
         0,
         0,
-        image.width,
-        image.height
+        this.image.width,
+        this.image.height
       );
     },
     submitAnswer() {
@@ -322,6 +324,10 @@ export default {
   },
   destroyed() {
     window.removeEventListener("beforeunload", this.handleRefresh);
+  },
+  beforeRouteLeave(to, from, next) {
+    this.quit();
+    next();
   },
   data() {
     return {

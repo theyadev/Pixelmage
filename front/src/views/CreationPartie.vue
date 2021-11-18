@@ -180,6 +180,13 @@ export default {
       this.$router.push({ path: "/" });
     }
 
+    this.socket.emit("GET CATEGORIES")
+
+    this.socket.on("CATEGORIES", (categories)=>{
+      this.categories = categories
+      this.category = categories[0]
+    })
+
     this.socket.on("UPDATED", (room) => {
       if (room.started == true) {
         this.socket.off("UPDATED");
@@ -221,10 +228,10 @@ export default {
     return {
       socket: this.$store.state.socket,
       id: parseInt(this.$route.query.id),
-      categories: ["Tout", "Pokémon", "Anime", "Disney", "Célébrités"],
+      categories: [],
       users: [],
       host: false,
-      category: "Anime",
+      category: "",
       maxRounds: 5,
       colors: [
         "FF0000",
