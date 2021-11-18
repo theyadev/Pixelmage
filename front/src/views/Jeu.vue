@@ -45,18 +45,18 @@
             class="absolute -left-48 top-1 w-14 h-14"
           />
           <div class="text-white font-bold text-5xl">
-           {{ hiddenAnswer }}
+            {{ hiddenAnswer }}
           </div>
         </div>
         <div class="flex justify-center">
-        <canvas
-          id="canvas"
-          class="w-8/12 rounded-lg object-contain lg:max-h-96"
-        />
-        <canvas
-          id="canvasInvisible"
-          class="w-8/12 rounded-lg object-contain lg:max-h-96 hidden"
-        />
+          <canvas
+            id="canvas"
+            class="w-8/12 rounded-lg object-contain lg:max-h-96"
+          />
+          <canvas
+            id="canvasInvisible"
+            class="w-8/12 rounded-lg object-contain lg:max-h-96 hidden"
+          />
         </div>
         <form @submit.prevent="submitAnswer" class="w-full flex justify-center">
           <input
@@ -162,7 +162,7 @@ export default {
 
       this.max = room.maxTime;
 
-      this.hiddenAnswer = room.answer
+      this.hiddenAnswer = room.answer;
     });
 
     this.socket.on("CHAT", (chat) => {
@@ -188,7 +188,7 @@ export default {
       if (finished) {
         this.pixelate(img, 1, true);
       } else {
-        this.pixelate(img, (this.current / this.max) * 5 + 1 );
+        this.pixelate(img, (this.current / this.max) * 5 + 1);
       }
     });
 
@@ -260,6 +260,7 @@ export default {
           duration: 5000,
         });
         this.socket.off("WRONG ANSWER");
+        this.socket.off("NEAR ANSWER");
       });
 
       this.socket.once("WRONG ANSWER", () => {
@@ -269,6 +270,17 @@ export default {
           duration: 2000,
         });
         this.socket.off("GOOD ANSWER");
+        this.socket.off("NEAR ANSWER");
+      });
+
+      this.socket.once("NEAR ANSWER", () => {
+        this.$toasted.show("Close one !", {
+          theme: "toasted-primary",
+          position: "top-center",
+          duration: 2000,
+        });
+        this.socket.off("GOOD ANSWER");
+        this.socket.off("WRONG ANSWER");
       });
 
       this.socket.emit("ANSWER", {
@@ -322,7 +334,7 @@ export default {
       reponse: "",
       message: "",
       answer: "",
-      hiddenAnswer: ""
+      hiddenAnswer: "",
     };
   },
 };
