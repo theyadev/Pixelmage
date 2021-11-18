@@ -16,6 +16,7 @@ import Start from "./events/start";
 import UpdateCategory from "./events/update_category";
 import UpdateMaxRounds from "./events/update_max_rounds";
 import Update from "./events/update";
+import getCategories from "./events/get_categories";
 
 const app = express();
 
@@ -55,4 +56,6 @@ io.on("connection", function (socket: Socket) {
   UpdateMaxRounds(io, socket, Rooms);
 
   Update(io, socket, Rooms);
+
+  getCategories(socket)
 });
