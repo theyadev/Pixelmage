@@ -1,54 +1,70 @@
 <template>
-  <div class="grid grid-cols-1 lg:grid-cols-3">
-    <div class="lg:col-start-2 flex flex-col items-center">
-    <h1 class="mt-10 mb-10 text-5xl text-white">Pixelmage</h1> 
-    <div
-      class="
-        relative
-        rounded-2xl
-        shadow-xl
-        bg-black-700
-        flex flex-col
-        items-center
-        p-10
-        space-y-3
-      "
-    >
-      <div class="text-white">Nom d'utilisateur</div>
-      <input
-        v-model="username"
-        type="text"
-        placeholder="Username"
+  <div class="flex flex-col h-screen w-screen bg-black bg-opacity-95">
+    <div class="bg-opacity-95 flex flex-grow items-center justify-center">
+      <div
         class="
-          w-4/5
-          px-4
-          py-1
-          rounded-full
-          ring-1 ring-white
-          transition
-          duration-500
-          focus:border-none
-          focus:outline-none
-          focus:ring-2
-          focus:ring-opacity-80
-          focus:shadow-lg
+          w-80
+          md:w-96
+          rounded
+          shadow
+          bg-white bg-opacity-5
+          text-white
+          py-10
+          px-10
+          flex flex-col
         "
-      />
-      <button
-        @click="joinGame"
-        class="ring-purple-700 btn w-2/4 flex justify-center"
       >
-        <span class="font-medium uppercase text-purple-700">Jouer</span>
-      </button>
-      <button
-        @click="createGame"
-        class="ring-yellow-600 btn flex justify-center"
-      >
-        <span class="font-medium uppercase text-yellow-600"
-          >Créer une salle</span
-        >
-      </button>
-    </div>
+        <div class="flex flex-col items-center">
+          <span class="text-xs">logo pixelmage</span>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-16 w-16 mb-5"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M13.477 14.89A6 6 0 015.11 6.524l8.367 8.368zm1.414-1.414L6.524 5.11a6 6 0 018.367 8.367zM18 10a8 8 0 11-16 0 8 8 0 0116 0z"
+              clip-rule="evenodd"
+            />
+          </svg>
+          <div v-if="game_id" class="text-center">
+            <span class="font-bold">Rejoindre une partie</span>
+            <p class="text-center">
+              Vous pouvez rejoindre la partie en précisant votre pseudonyme et
+              en cliquant sur "Rejoindre la partie" !!
+            </p>
+          </div>
+          <div v-else class="text-center">
+            <span class="font-bold">Creer une partie</span>
+            <p class="text-center">
+              Vous pouvez creer une partie pour jouer avec vos amis !!
+            </p>
+          </div>
+        </div>
+        <div class="mt-5">
+          <p class="text-sm font-medium pb-2.5">Pseudonyme</p>
+          <input
+            type="text"
+            v-model="username"
+            placeholder="e.g Theya"
+            class="
+              rounded
+              mb-3
+              border-none
+              w-full
+              bg-white bg-opacity-10
+              text-white
+            "
+          />
+          <div v-if="game_id" @click="joinGame" class="btn-join-create">
+            Rejoindre la partie
+          </div>
+          <div v-else @click="createGame" class="btn-join-create">
+            Creer une partie
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
