@@ -1,12 +1,22 @@
 <template>
-<div class="relative w-screen group">
-  <div class="bg-gradient-to-r from-purple-600 to-yellow-500 absolute w-full h-full rounded-b-3xl filter blur opacity-25 transition duration-1000 group-hover:opacity-50"></div>
-  <div class="relative bg-black-700 py-4 px-10 text-white rounded-b-3xl flex items-center space-x-5">
-    <router-link v-for="route in navs" :key="route.name" :to="route.path">
-    <a class="btn-nav" :class="'border-' + route.color">{{route.name}}</a>
-    </router-link>
-  </div>
-  </div>
+        <div class="absolute overflow-x-hidden h-32">
+            <div class="absolute inset-y-1 h-16 transform rotate-1 w-screen bg-green-500 "></div>
+            <div class="absolute inset-y-1 h-16 transform -rotate-1 w-screen bg-red-500"></div>
+            <div class="absolute inset-y-0.5 h-16 transform rotate-1 w-screen" style="background-color:rgb(10, 10, 10)"></div>
+            <div class="absolute inset-y-0.5 h-16 transform -rotate-1 w-screen bg-opacity-95" style="background-color:rgb(10, 10, 10)"></div>
+
+            <div id="navbar" class="relative h-16 w-screen text-white grid grid-cols-3 gap-4 items-center" style="background-color:rgb(10, 10, 10)">
+                <router-link to="/"
+                    class="justify-self-center select-none text-xl underline red-underline px-5 py-1 cursor-pointer rounded hover:bg-opacity-20 hover:bg-red-400">
+                    Accueil</router-link>
+                <router-link to="/"
+                    class="justify-self-center select-none text-3xl px-5 py-1 cursor-pointer rounded hover:bg-opacity-20 hover:bg-gray-400">
+                    Pixelmage</router-link>
+                <router-link to="/publics"
+                    class="justify-self-center select-none text-xl underline green-underline px-5 py-1 cursor-pointer rounded hover:bg-opacity-20 hover:bg-green-400">
+                    Publiques</router-link>
+            </div>
+        </div>
 </template>
 
 <script>
@@ -31,5 +41,13 @@ export default {
 </script>
 
 <style>
+    .red-underline {
+        text-decoration-color: #EF4444;
+        text-underline-offset: 3px;
+    }
 
+    .green-underline {
+        text-decoration-color: #10B981;
+        text-underline-offset: 3px;
+    }
 </style>

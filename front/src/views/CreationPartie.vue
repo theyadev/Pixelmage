@@ -1,83 +1,146 @@
 <template>
-  <div class="flex flex-col flex-grow items-center">
-    <h1 class="mt-10 mb-10 text-5xl text-white">Pixelmage</h1>
-    <div class="grid grid-cols-1 lg:grid-cols-3 px-10 gap-4 md:px-52 lg:px-0">
+  <div class="flex flex-col h-screen w-screen bg-black bg-opacity-95">
+    <div class="bg-opacity-95 flex flex-grow items-center justify-center">
       <div
         class="
-          col-start-2
-          rounded-2xl
-          shadow-xl
-          bg-black-700
+          w-10/12
+          md:w-7/12
+          lg:w-2/5
+          rounded
+          shadow
+          bg-white bg-opacity-5
+          text-white
+          py-10
+          px-10
           flex flex-col
-          items-center
-          p-10
           space-y-5
         "
       >
-        <div class="text-white text-2xl">Paramètres de la partie</div>
-        <div class="flex flex-col items-center space-y-2">
-          <div class="text-white">Catégorie</div>
-          <select
-            v-model="category"
-            :disabled="!host"
-            class="rounded-full py-1"
-            @change="updateGameCategory"
+        <div class="flex flex-col items-center">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-16 w-16 mb-5"
+            viewBox="0 0 20 20"
+            fill="currentColor"
           >
-            <option v-for="categorie in categories" :key="categorie">
-              {{ categorie }}
-            </option>
-          </select>
+            <path d="M13 7H7v6h6V7z" />
+            <path
+              fill-rule="evenodd"
+              d="M7 2a1 1 0 012 0v1h2V2a1 1 0 112 0v1h2a2 2 0 012 2v2h1a1 1 0 110 2h-1v2h1a1 1 0 110 2h-1v2a2 2 0 01-2 2h-2v1a1 1 0 11-2 0v-1H9v1a1 1 0 11-2 0v-1H5a2 2 0 01-2-2v-2H2a1 1 0 110-2h1V9H2a1 1 0 010-2h1V5a2 2 0 012-2h2V2zM5 5h10v10H5V5z"
+              clip-rule="evenodd"
+            />
+          </svg>
+          <span class="font-bold">Configuration de la partie</span>
+          <p class="text-center">
+            Tout les parametres sont a votre disposition pour creer la meilleure
+            des parties !!
+          </p>
         </div>
-        <div class="flex flex-col items-center space-y-2">
-          <div class="text-white">Nombre de rounds</div>
-          <select
-            v-model="maxRounds"
-            :disabled="!host"
-            class="rounded-full py-1"
-            @change="updateGameMaxRounds"
+        <div class="w-full h-px bg-white"></div>
+        <div class="grid grid-cols-2">
+          <div>
+            <div>Catégorie</div>
+            <select
+              class="text-black-900 rounded mt-2 py-1"
+              v-model="category"
+              :disabled="!host"
+              @change="updateGameCategory"
+            >
+              <option v-for="categorie in categories" :key="categorie">
+                {{ categorie }}
+              </option>
+            </select>
+          </div>
+          <div>
+            <div>Rounds</div>
+            <select
+              class="text-black-900 rounded mt-2 py-1"
+              v-model="maxRounds"
+              :disabled="!host"
+              @change="updateGameMaxRounds"
+            >
+              <option v-for="i in 6" :key="i">{{ i + 4 }}</option>
+            </select>
+          </div>
+        </div>
+        <div class="w-full h-px bg-white"></div>
+        <div class="grid grid-cols-6 gap-4">
+          <div
+            class="
+              col-span-2
+              w-full
+              py-2
+              rounded
+              flex
+              bg-white bg-opacity-5
+              justify-center
+              items-center
+              space-x-2
+              cursor-pointer
+            "
+            @click="leave"
           >
-            <option v-for="i in 6" :key="i">{{ i }}</option>
-          </select>
-        </div>
-        
-        <div class="flex items-center">
-          <button @click="previousColorIndex">
-            <svg xmlns="http://www.w3.org/2000/svg" class="text-white h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M3 3a1 1 0 00-1 1v12a1 1 0 102 0V4a1 1 0 00-1-1zm10.293 9.293a1 1 0 001.414 1.414l3-3a1 1 0 000-1.414l-3-3a1 1 0 10-1.414 1.414L14.586 9H7a1 1 0 100 2h7.586l-1.293 1.293z"
+                clip-rule="evenodd"
+              />
             </svg>
-          </button>
-
-          <div class="h-5 w-5 rounded-full" :style="'background-color:#' + colors[colorIndexSelected]"></div>
-
-          <button @click="nextColorIndex">
-            <svg xmlns="http://www.w3.org/2000/svg" class="text-white h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            <div>Quitter</div>
+          </div>
+          <div
+            class="
+              w-full
+              py-2
+              rounded
+              flex
+              bg-pink-500
+              justify-center
+              items-center
+              space-x-2
+              cursor-pointer
+            "
+            @click="copyLink"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+            >
+              <path d="M8 3a1 1 0 011-1h2a1 1 0 110 2H9a1 1 0 01-1-1z" />
+              <path
+                d="M6 3a2 2 0 00-2 2v11a2 2 0 002 2h8a2 2 0 002-2V5a2 2 0 00-2-2 3 3 0 01-3 3H9a3 3 0 01-3-3z"
+              />
             </svg>
-          </button>
+          </div>
+          <div
+            :disabled="!host"
+            @click="startGame"
+            class="
+              col-span-3
+              w-full
+              py-2
+              rounded
+              flex
+              bg-gradient-to-r
+              from-red-500
+              to-green-500
+              justify-center
+              cursor-pointer
+            "
+          >
+            Démarrer la partie
+          </div>
         </div>
-        <button
-          :disabled="!host"
-          class="
-            ring-purple-700
-            btn
-            flex
-            justify-center
-            disabled:opacity-30 disabled:cursor-default
-          "
-        >
-          <span class="font-medium uppercase text-purple-700" @click="startGame"
-            >Démarrer la partie</span
-          >
-        </button>
-        <button
-          class="ring-green-700 btn flex justify-center"
-          @click="copyLink"
-        >
-          <span class="font-medium uppercase text-green-700"
-            >Copier le lien</span
-          >
-        </button>
-        <div class="flex flex-wrap justify-center gap-3">
+        <div class="w-full h-px bg-white"></div>
+        <div class="flex flex-wrap justify-center gap-3 text-black-900">
           <div
             v-for="i in 20"
             :key="i"
@@ -170,9 +233,29 @@ export default {
       host: false,
       category: "",
       maxRounds: 5,
-      colors : ["FF0000", "FF3E00", "FFD800", "1FFF00", "00FFCD", "009BFF", "004DFF", "0008FF", "6400FF", "C500FF", 
-          "FB71C3", "D57700", "BEE800", "016A23", "12003D", "3D0038", "4C0000", "F09761", "4F4640", "9AA4CA"],
-      colorIndexSelected : 0
+      colors: [
+        "FF0000",
+        "FF3E00",
+        "FFD800",
+        "1FFF00",
+        "00FFCD",
+        "009BFF",
+        "004DFF",
+        "0008FF",
+        "6400FF",
+        "C500FF",
+        "FB71C3",
+        "D57700",
+        "BEE800",
+        "016A23",
+        "12003D",
+        "3D0038",
+        "4C0000",
+        "F09761",
+        "4F4640",
+        "9AA4CA",
+      ],
+      colorIndexSelected: 0,
     };
   },
   methods: {
@@ -180,6 +263,10 @@ export default {
       this.quit();
       event.stopImmediatePropagation();
       event.preventDefault();
+    },
+    leave() {
+      this.quit()
+      this.$router.push('/')
     },
     quit() {
       if (this.$store.state.username) {
@@ -214,31 +301,29 @@ export default {
     startGame() {
       this.socket.emit("START", { id: this.id });
     },
-    emitChangeColorInServer(){
+    emitChangeColorInServer() {
       this.socket.emit("CHANGE COLOR", {
-          id: this.id,
-          name: this.$store.state.username,
-          color: this.colors[this.colorIndexSelected]
-        })
+        id: this.id,
+        name: this.$store.state.username,
+        color: this.colors[this.colorIndexSelected],
+      });
     },
-    nextColorIndex(){
-      if (this.colorIndexSelected<this.colors.length){
-        this.colorIndexSelected++
+    nextColorIndex() {
+      if (this.colorIndexSelected < this.colors.length) {
+        this.colorIndexSelected++;
+      } else {
+        this.colorIndexSelected = 0;
       }
-      else{
-        this.colorIndexSelected=0
-      } 
-      this.emitChangeColorInServer()     
+      this.emitChangeColorInServer();
     },
-    previousColorIndex(){
-      if (this.colorIndexSelected>0){
-        this.colorIndexSelected--
+    previousColorIndex() {
+      if (this.colorIndexSelected > 0) {
+        this.colorIndexSelected--;
+      } else {
+        this.colorIndexSelected = this.colors.length - 1;
       }
-      else{
-        this.colorIndexSelected=this.colors.length-1
-      } 
-      this.emitChangeColorInServer()         
-    }
+      this.emitChangeColorInServer();
+    },
   },
 };
 </script>

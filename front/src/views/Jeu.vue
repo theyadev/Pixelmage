@@ -1,4 +1,5 @@
 <template>
+<div class="flex flex-col h-screen w-screen bg-black-600 bg-opacity-95 pt-20">
   <div class="grid grid-cols-1 md:grid-cols-8 h-full">
     <div
       class="
@@ -135,6 +136,7 @@
       </div>
     </div>
   </div>
+</div>
 </template>
 
 <script>
