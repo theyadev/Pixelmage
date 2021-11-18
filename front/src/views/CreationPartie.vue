@@ -21,7 +21,7 @@
             v-model="category"
             :disabled="!host"
             class="rounded-full py-1"
-            @change="updateGameCategory($event)"
+            @change="updateGameCategory"
           >
             <option v-for="categorie in categories" :key="categorie">
               {{ categorie }}
@@ -34,7 +34,7 @@
             v-model="maxRounds"
             :disabled="!host"
             class="rounded-full py-1"
-            @change="updateGameMaxRounds($event)"
+            @change="updateGameMaxRounds"
           >
             <option v-for="i in 6" :key="i">{{ i }}</option>
           </select>
