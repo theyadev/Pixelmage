@@ -157,7 +157,7 @@ export default {
       this.users = room.users.sort(sortThing);
 
       this.chat = room.chat;
-      
+
       const img = new Image();
 
       img.src = room.image;
@@ -225,7 +225,7 @@ export default {
       ctx.webkitImageSmoothingEnabled = false;
       ctx.imageSmoothingEnabled = false;
 
-      if (this.image.height == 0 || this.image.width == 0) return
+      if (this.image.height == 0 || this.image.width == 0) return;
 
       ctx2.clearRect(0, 0, scaledW, scaledH);
       ctx2.drawImage(this.image, 0, 0, scaledW, scaledH);
@@ -322,6 +322,10 @@ export default {
   },
   destroyed() {
     window.removeEventListener("beforeunload", this.handleRefresh);
+  },
+  beforeRouteLeave(to, from, next) {
+    this.quit();
+    next();
   },
   data() {
     return {
