@@ -290,7 +290,7 @@ export default {
       });
     },
     copyLink() {
-      const url = "https://pixelmage.vercel.app/?id=" + this.id;
+      const url = "https://www.pixelmage.tk/?id=" + this.id;
       navigator.clipboard.writeText(url);
       this.$toasted.success("Copied !", {
         theme: "toasted-primary",
