@@ -2,7 +2,7 @@ import { Room } from "../types";
 import { everyoneAnswered } from "./startNextRound";
 
 function formatAnswer(text: string) {
-  return text.replace("_", " ").normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(" ", "\xa0").replace(/[a-zA-Z0-9]/g, " _ ")
+  return text.replace("_", " ").normalize("NFD").replace(/[\u0300-\u036f]/g, "").replaceAll(" ", "\xa0").replace(/[a-zA-Z0-9]/g, " _ ")
 }
 
 /**
