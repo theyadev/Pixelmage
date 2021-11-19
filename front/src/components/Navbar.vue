@@ -19,27 +19,6 @@
         </div>
 </template>
 
-<script>
-export default {
-  data() {
-    return {
-      navs: [
-        {
-          path: "/",
-          name: "Connexion",
-          color: "purple-500"
-        },
-        {
-          path: "/publics",
-          name: "Parties Publiques",
-          color: "yellow-500"
-        }
-      ]
-    }
-  }
-}
-</script>
-
 <style>
     .red-underline {
         text-decoration-color: #EF4444;
