@@ -44,7 +44,7 @@ export default {
     },
     gradient() {
       return {
-        background: `radial-gradient(black 60%, transparent 61%), conic-gradient(#D53738 0% ${this.percent}%, transparent ${this.percent}% 100%)`,
+        background: `radial-gradient(black 60%, transparent 61%), conic-gradient(#EF4444 0% ${this.percent}%, transparent ${this.percent}% 100%)`,
       };
     },
   },
