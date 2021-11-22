@@ -32,7 +32,7 @@ export default function Start(
 
     room.started = true;
 
-    const categories: string[] = data.categories.map((e: Category) => {
+    const categories: string[] = data.categories.filter((e: any) => e.active === true).map((e: Category) => {
       return "'" + e.name.toLowerCase().replaceAll("'", "''") + "'"
     })
 
