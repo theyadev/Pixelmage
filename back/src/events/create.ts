@@ -25,7 +25,7 @@ export default function Create(socket: Socket, Rooms: Map<number, Room>) {
       categories: [],
       currentRound: 1,
       maxRounds: 5,
-      maxTime: 10,
+      maxTime: 30,
       chat: [],
       answers: [],
       started: false,
