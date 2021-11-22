@@ -5,7 +5,7 @@
         class="
           md:row-span-2 md:col-span-2
           lg:col-span-1 lg:row-span-1
-          bg-red-400
+          bg-red-500
           flex flex-col
           items-center
           space-y-4
@@ -37,15 +37,16 @@
           <!-- -->
         </div>
       </div>
+
       <div class="md:col-span-6 lg:col-span-5 bg-black-600 pb-10 lg:pb-0">
         <div class="flex flex-col items-center justify-center pt-5 space-y-8">
-          <div class="relative flex items-center">
+          <div class="relative flex flex-col items-center text-center">
             <Timer
               :max="max"
               :current="max - current"
-              class="absolute -left-48 top-1 w-14 h-14"
+              class=" top-1 w-14 h-14"
             />
-            <div class="text-white font-bold text-5xl">
+            <div class="text-white text-center font-bold text-5xl px-5">
               {{ hiddenAnswer }}
             </div>
           </div>
@@ -196,7 +197,7 @@ export default {
       if (finished) {
         this.pixelate(1, true);
       } else {
-        this.pixelate((this.current / this.max) * 2 + 0.2);
+        this.pixelate((this.current / this.max) * 3 + 0.5);
       }
     });
 
