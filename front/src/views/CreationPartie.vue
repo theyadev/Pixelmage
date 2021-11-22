@@ -120,9 +120,9 @@
               />
             </svg>
           </div>
-          <div
+          <button
             :disabled="!host"
-            @click="startGame"
+            v-on="{ [host ? 'click' : null]: startGame }"
             class="
               col-span-3
               w-full
@@ -134,10 +134,12 @@
               to-green-500
               justify-center
               cursor-pointer
+              disabled:opacity-70
+              disabled:cursor-default
             "
           >
             Démarrer la partie
-          </div>
+          </button>
         </div>
         <div class="w-full h-px bg-white"></div>
         <div class="flex flex-wrap justify-center gap-3 text-black-900">
@@ -299,6 +301,8 @@ export default {
       });
     },
     startGame() {
+      console.log(this.host);
+      if (!this.host) return
       this.socket.emit("START", { id: this.id });
     },
     emitChangeColorInServer() {
