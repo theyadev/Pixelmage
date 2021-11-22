@@ -22,7 +22,7 @@ export type User = {
 export type Room = {
   id: number;
   users: User[];
-  category: "Anime";
+  categories: string[];
   currentRound: number;
   maxRounds: number;
   maxTime: number;

@@ -16,7 +16,7 @@ export default function update(io: any, room: Room) {
   io.sockets.in(room.id).emit("UPDATED", {
     id: room.id,
     users: room.users,
-    category: room.category,
+    categories: room.categories,
     currentRound: room.currentRound,
     maxRounds: room.maxRounds,
     maxTime: room.maxTime,

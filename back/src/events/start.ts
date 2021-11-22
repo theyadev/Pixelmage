@@ -6,6 +6,11 @@ import { resetAnswer } from "../functions/resets";
 import startNextRound from "../functions/startNextRound";
 import { query } from "../db";
 
+
+type Category = {
+  name: string;
+  active: boolean
+}
 export default function Start(
   io: any,
   socket: Socket,
@@ -27,11 +32,16 @@ export default function Start(
 
     room.started = true;
 
+    const categories: string[] = data.categories.map((e: Category) => {
+      return "'" + e.name.toLowerCase().replaceAll("'", "''") + "'"
+    })
+
     const res = await query(`
       SELECT url, answer, aliases, category 
       FROM images 
       JOIN categories 
       ON (images."categoryId" = categories.id)
+      WHERE category IN (${categories.join(", ")})
       ORDER BY random()
       LIMIT ${room.maxRounds};
     `);

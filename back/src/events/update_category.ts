@@ -12,7 +12,7 @@ export default function UpdateCategory(
    * Change the category
    */
   socket.on("UPDATE CATEGORY", function (data) {
-    if (!data.category || !data.id) return;
+    if (!data.categories || !data.id) return;
 
     const room = Rooms.get(data.id);
 
@@ -20,7 +20,7 @@ export default function UpdateCategory(
 
     console.log(`${room.id} -> UPDATE CATEGORY !`);
 
-    room.category = data.category;
+    room.categories = data.categories;
 
     update(io, room);
   });

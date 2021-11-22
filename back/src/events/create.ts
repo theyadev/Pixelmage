@@ -22,7 +22,7 @@ export default function Create(socket: Socket, Rooms: Map<number, Room>) {
           color: "",
         },
       ],
-      category: "Anime",
+      categories: [],
       currentRound: 1,
       maxRounds: 5,
       maxTime: 10,

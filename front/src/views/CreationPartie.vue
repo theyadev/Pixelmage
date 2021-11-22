@@ -40,16 +40,108 @@
         <div class="grid grid-cols-2">
           <div>
             <div>Catégorie</div>
-            <select
-              class="text-black-900 rounded mt-2 py-1"
-              v-model="category"
-              :disabled="!host"
-              @change="updateGameCategory"
-            >
-              <option v-for="categorie in categories" :key="categorie">
-                {{ categorie }}
-              </option>
-            </select>
+            <div class="relative">
+              <div
+                class="
+                  mt-2
+                  h-8
+                  bg-white
+                  text-black-900
+                  flex
+                  items-center
+                  justify-between
+                  px-4
+                  py-4
+                  w-10/12
+                "
+                :class="[
+                  dropdownCategories ? 'rounded-t' : 'rounded',
+                  host ? 'cursor-pointer' : 'cursor-default opacity-60',
+                ]"
+                v-on="{
+                  [host ? 'click' : null]: () => {
+                    dropdownCategories = !dropdownCategories;
+                  },
+                }"
+              >
+                <div>{{ inlineCategories() }}</div>
+                <svg
+                  class="w-5 h-5 text-gray-600"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M19 9l-7 7-7-7"
+                  ></path>
+                </svg>
+              </div>
+              <div
+                v-if="dropdownCategories"
+                class="
+                  absolute
+                  bg-white
+                  rounded-b
+                  text-black-900
+                  flex-col
+                  justify-between
+                  py-0.5
+                  w-10/12
+                  divide-y
+                "
+              >
+                <div
+                  @click="checkAll"
+                  class="px-4 cursor-pointer flex justify-between"
+                >
+                  <div>Tout</div>
+                  <svg
+                    v-if="allActive()"
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-6 w-6 text-green-600"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M5 13l4 4L19 7"
+                    />
+                  </svg>
+                </div>
+                <div
+                  v-for="categorie in categories"
+                  :key="categorie.name"
+                  @click="checkCategory(categorie)"
+                  class="px-4 cursor-pointer flex justify-between"
+                >
+                  <div>
+                    {{ categorie.name }}
+                  </div>
+                  <svg
+                    v-if="categorie.active"
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-6 w-6 text-green-600"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M5 13l4 4L19 7"
+                    />
+                  </svg>
+                </div>
+              </div>
+            </div>
           </div>
           <div>
             <div>Rounds</div>
@@ -134,8 +226,7 @@
               to-green-500
               justify-center
               cursor-pointer
-              disabled:opacity-70
-              disabled:cursor-default
+              disabled:opacity-70 disabled:cursor-default
             "
           >
             Démarrer la partie
@@ -182,12 +273,18 @@ export default {
       this.$router.push({ path: "/" });
     }
 
-    this.socket.emit("GET CATEGORIES")
+    this.socket.emit("GET CATEGORIES");
 
-    this.socket.on("CATEGORIES", (categories)=>{
-      this.categories = categories
-      this.category = categories[0]
-    })
+    this.socket.on("CATEGORIES", (categories) => {
+      this.categories = categories.map((e) => {
+        return {
+          name: e,
+          active: false,
+        };
+      });
+      
+      this.updateCategories()
+    });
 
     this.socket.on("UPDATED", (room) => {
       if (room.started == true) {
@@ -197,8 +294,10 @@ export default {
       }
 
       let users = room.users;
-      this.category = room.category;
+
       this.maxRounds = room.maxRounds;
+      this.categories = room.categories;
+
       for (let i = 0; i < 20; i++) {
         if (users[i]) {
           if (
@@ -233,7 +332,7 @@ export default {
       categories: [],
       users: [],
       host: false,
-      category: "",
+      dropdownCategories: false,
       maxRounds: 5,
       colors: [
         "FF0000",
@@ -261,14 +360,51 @@ export default {
     };
   },
   methods: {
+    updateCategories(){
+      this.socket.emit("UPDATE CATEGORY", {
+        categories: this.categories,
+        id: this.id,
+      });
+    },
+    checkCategory(categorie) {
+      categorie.active = !categorie.active;
+      this.updateCategories()
+    },
+    inlineCategories() {
+      let catNames = this.categories.map((e) => {
+        if (e.active) return e.name;
+      });
+
+      catNames = catNames.filter((e) => e);
+
+      return catNames.join(", ");
+    },
+    anyActive() {
+      return this.categories.some((e) => e.active);
+    },
+    allActive() {
+      return this.categories.every((e) => e.active);
+    },
+    checkAll() {
+      if (this.allActive()) {
+        this.categories.forEach((e) => {
+          e.active = false;
+        });
+      } else {
+        this.categories.forEach((e) => {
+          e.active = true;
+        });
+      }
+      this.updateCategories()
+    },
     handleRefresh(event) {
       this.quit();
       event.stopImmediatePropagation();
       event.preventDefault();
     },
     leave() {
-      this.quit()
-      this.$router.push('/')
+      this.quit();
+      this.$router.push("/");
     },
     quit() {
       if (this.$store.state.username) {
@@ -278,12 +414,6 @@ export default {
         });
         this.$store.state.username = null;
       }
-    },
-    updateGameCategory(event) {
-      this.socket.emit("UPDATE CATEGORY", {
-        category: event.target.value,
-        id: this.id,
-      });
     },
     updateGameMaxRounds(event) {
       this.socket.emit("UPDATE MAX ROUNDS", {
@@ -302,8 +432,16 @@ export default {
     },
     startGame() {
       console.log(this.host);
-      if (!this.host) return
-      this.socket.emit("START", { id: this.id });
+      if (!this.host) return;
+      if (!this.anyActive()) {
+        this.$toasted.error("Il faut mettre au moins une catégorie !", {
+          theme: "toasted-primary",
+          position: "top-center",
+          duration: 1000,
+        });
+        return;
+      }
+      this.socket.emit("START", { id: this.id, categories: this.categories });
     },
     emitChangeColorInServer() {
       this.socket.emit("CHANGE COLOR", {
