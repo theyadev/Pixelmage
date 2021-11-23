@@ -9,7 +9,7 @@ export default new Vuex.Store({
     username: null,
     // socket: io("http://localhost:8000", {transports: ['websocket'], upgrade: false, closeOnBeforeunload: false}),
     socket: io("http://93.6.41.243:8271/", {transports: ['websocket'], upgrade: false, closeOnBeforeunload: false}),
-    //socket: io("http://api.pixelmage.tk/", {transports: ['websocket'], upgrade: false, closeOnBeforeunload: false}),
+    // socket: io("http://api.pixelmage.tk/", {transports: ['websocket'], upgrade: false, closeOnBeforeunload: false}),
     connected: false,
   },
   mutations: {
