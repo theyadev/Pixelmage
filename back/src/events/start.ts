@@ -4,7 +4,7 @@ import { Room } from "../types";
 import update from "../functions/update";
 import { resetAnswer } from "../functions/resets";
 import startNextRound from "../functions/startNextRound";
-import { query } from "../db";
+import { getImages } from "../db";
 
 
 type Category = {
@@ -33,20 +33,10 @@ export default function Start(
     room.started = true;
 
     const categories: string[] = data.categories.filter((e: any) => e.active === true).map((e: Category) => {
-      return "'" + e.name.toLowerCase().replaceAll("'", "''") + "'"
+      return e.name.toLowerCase().replaceAll("'", "''")
     })
-
-    const res = await query(`
-      SELECT url, answer, aliases, category 
-      FROM images 
-      JOIN categories 
-      ON (images."categoryId" = categories.id)
-      WHERE category IN (${categories.join(", ")})
-      ORDER BY random()
-      LIMIT ${room.maxRounds};
-    `);
-
-    room.answers = res.rows;
+    
+    room.answers = await getImages(categories, room.maxRounds)
 
     update(io, room);
 
