@@ -1,6 +1,6 @@
 import { Socket } from "socket.io";
 
-import { query } from "../db"
+import { getCategories } from "../db"
 
 function capitalize(str: string) {
     const split = str.split(" ")
@@ -8,13 +8,13 @@ function capitalize(str: string) {
     return capitalizedSplit.join(' ')
 }
 
-export default function getCategories(socket: Socket) {
+export default function GetCategories(socket: Socket) {
   /**
    * When someone ask for Categories
    */
 
   socket.on("GET CATEGORIES", async function () {
-    const categories = await query("SELECT * FROM categories")      
-    socket.emit("CATEGORIES", categories.rows.map(e =>  capitalize(e.category) ));
+    const categories = await getCategories() 
+    socket.emit("CATEGORIES", categories.map(e =>  capitalize(e.category) ));
   });
 }

@@ -17,11 +17,12 @@
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
     "helmet": "^4.6.0",
-    "pg": "^8.7.1",
+    "mongoose": "^6.0.13",
     "socket.io": "^4.3.2"
   },
   "devDependencies": {
     "@types/express": "^4.17.13",
+    "@types/mongoose": "^5.11.97",
     "concurrently": "^6.4.0",
     "nodemon": "^2.0.15",
     "tslint": "^6.1.3",
