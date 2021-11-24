@@ -23,6 +23,6 @@ export default function update(io: any, room: Room) {
     chat: room.chat,
     started: room.started,
     answer: currentAnswer ? everyoneAnswered(room) ? currentAnswer.answer : formatAnswer(currentAnswer.answer) : "",
-    image: currentAnswer?.url,
+    image: currentAnswer? currentAnswer.url : undefined,
   });
 }

@@ -23,7 +23,7 @@ function checkAnswer(
       completeNormalize(userAnswer),
       completeNormalize(roomAnswer.answer)
     ) >= minPercentage ||
-    roomAnswer.aliases?.some(
+    roomAnswer.aliases && roomAnswer.aliases.some(
       (e) =>
         levenshtein(completeNormalize(e), completeNormalize(userAnswer)) >=
         minPercentage
