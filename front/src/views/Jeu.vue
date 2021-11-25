@@ -200,7 +200,7 @@ export default {
       if (finished) {
         this.pixelate(1, true);
       } else {
-        this.pixelate((this.current / this.max) * 3 + 0.5);
+        this.pixelate((this.current / this.max) * 0.1);
       }
     });
 
@@ -214,10 +214,6 @@ export default {
   },
   methods: {
     pixelate(scale, finished = false) {
-      if (!finished) {
-        scale *= 0.01;
-      }
-
       var canvas2 = document.getElementById("canvasInvisible");
       var canvas = document.getElementById("canvas");
 
