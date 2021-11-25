@@ -56,12 +56,13 @@ export function endRound(io: any, room: Room) {
       update(io, room);
 
       if (room.maxRounds <= room.currentRound - 1) {
-        resetRoom(room);
-        resetScore(room);
+
+        //resetRoom(room);
+        //resetScore(room);
 
         console.log(`${room.id} -> FIN DE LA PARTIE !`);
-
-        return io.sockets.in(room.id).emit("QUIT TO LOBBY");
+        
+        return io.sockets.in(room.id).emit("DISPLAY LEADERBOARD");
       } else {
         console.log(`${room.id} -> ROUND SUIVANT !`);
 

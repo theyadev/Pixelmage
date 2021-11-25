@@ -40,7 +40,7 @@
       </div>
 
       <div class="md:col-span-6 lg:col-span-5 bg-black-600 pb-10 lg:pb-0">
-        <div class="flex flex-col items-center justify-center pt-5 space-y-8">
+        <div v-if="leaderboard" class="flex flex-col items-center justify-center pt-5 space-y-8">
           <div class="relative flex flex-col items-center text-center">
             <Timer
               :max="max"
@@ -72,6 +72,7 @@
             />
           </form>
         </div>
+        <Leaderboard v-else :users="users" />
       </div>
       <div
         class="md:col-span-6 lg:col-span-2 flex flex-col bg-black-400 px-5 py-5"
@@ -149,6 +150,7 @@
 
 <script>
 import Timer from "../components/Timer.vue";
+import Leaderboard from "../components/Leaderboard.vue";
 export default {
   created() {
     window.addEventListener("beforeunload", this.handleRefresh);
@@ -205,13 +207,15 @@ export default {
       }
     });
 
-    this.socket.once("QUIT TO LOBBY", () => {
-      console.log("QUITTER");
-      this.$router.push({ path: "/create", query: { id: this.id } });
+    this.socket.once("DISPLAY LEADERBOARD", () => {
+      console.log("DISPLAY LB");
+      this.leaderboard = true;
+      //this.$router.push({ path: "/create", query: { id: this.id } });
     });
   },
   components: {
     Timer,
+    Leaderboard,
   },
   methods: {
     pixelate(scale, finished = false) {
@@ -352,6 +356,7 @@ export default {
       message: "",
       answer: "",
       hiddenAnswer: "",
+      leaderboard: false,
     };
   },
 };
