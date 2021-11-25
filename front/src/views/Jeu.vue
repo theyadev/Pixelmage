@@ -17,6 +17,7 @@
           v-for="user in users"
           :key="user.username"
           class="py-2 px-6 bg-white rounded w-full flex flex-col items-center"
+          :class="user.answered ?'bg-green-500' :''"
         >
           <div class="flex items-center space-x-1">
             <svg
