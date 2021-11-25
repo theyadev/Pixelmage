@@ -184,7 +184,10 @@ export default {
 
       // Scroll at the end of the chat
       const chatDiv = document.getElementById("chat");
-      chatDiv.scrollTop = chatDiv.scrollHeight;
+      setTimeout(()=>{
+        chatDiv.scrollTop = chatDiv.scrollHeight
+      },0)
+      
     });
 
     this.socket.emit("UPDATE", {
