@@ -37,7 +37,7 @@
           </p>
         </div>
         <div class="w-full h-px bg-white"></div>
-        <div class="grid grid-cols-2">
+        <div class="flex space-x-10">
           <div>
             <div>Catégorie</div>
             <div class="relative">
@@ -52,7 +52,8 @@
                   justify-between
                   px-4
                   py-4
-                  w-10/12
+                  w-40
+                  relative
                 "
                 :class="[
                   dropdownCategories ? 'rounded-t' : 'rounded',
@@ -64,7 +65,8 @@
                   },
                 }"
               >
-                <div>{{ inlineCategories() }}</div>
+                <div>{{ inlineCategories()[0] }} <span v-if="inlineCategories().length - 1 > 0">+{{inlineCategories().length - 1 }}</span></div>
+
                 <svg
                   class="w-5 h-5 text-gray-600"
                   fill="none"
@@ -79,18 +81,19 @@
                     d="M19 9l-7 7-7-7"
                   ></path>
                 </svg>
-              </div>
+              </div>          
               <div
                 v-if="dropdownCategories"
                 class="
                   absolute
                   bg-white
                   rounded-b
+                  
                   text-black-900
                   flex-col
                   justify-between
                   py-0.5
-                  w-10/12
+                  w-40
                   divide-y
                 "
               >
@@ -152,6 +155,17 @@
               @change="updateGameMaxRounds"
             >
               <option v-for="i in 6" :key="i">{{ i + 4 }}</option>
+            </select>
+          </div>
+          <div>
+            <div>Durée des rounds</div>
+              <select
+              class="text-black-900 rounded mt-2 py-1"
+              v-model="maxRounds"
+              :disabled="!host"
+              @change="updateGameMaxRounds"
+            >
+              <option v-for="i in 6" :key="i">{{ i*10 + 20 }}</option>
             </select>
           </div>
         </div>
@@ -276,14 +290,16 @@ export default {
     this.socket.emit("GET CATEGORIES");
 
     this.socket.on("CATEGORIES", (categories) => {
-      this.categories = categories.map((e) => {
-        return {
-          name: e,
-          active: false,
-        };
-      });
+      if (this.host == true) {
+        this.categories = categories.map((e) => {
+          return {
+            name: e,
+            active: false,
+          };
+        });
       
-      this.updateCategories()
+        this.updateCategories()
+      }
     });
 
     this.socket.on("UPDATED", (room) => {
@@ -375,9 +391,7 @@ export default {
         if (e.active) return e.name;
       });
 
-      catNames = catNames.filter((e) => e);
-
-      return catNames.join(", ");
+      return catNames.filter((e) => e);
     },
     anyActive() {
       return this.categories.some((e) => e.active);
