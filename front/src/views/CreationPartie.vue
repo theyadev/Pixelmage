@@ -88,7 +88,7 @@
                   absolute
                   bg-white
                   rounded-b
-                  
+                  z-20
                   text-black-900
                   flex-col
                   justify-between
@@ -259,7 +259,7 @@
             </div>
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              class="relative h-5 w-5 text-black-300"
+              class="relative h-5 w-5 text-black-300 z-10"
               :class="[users[i - 1] ? 'text-white cursor-pointer' : '']"
               viewBox="0 0 20 20"
               fill="currentColor"
