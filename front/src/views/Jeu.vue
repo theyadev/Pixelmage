@@ -48,7 +48,7 @@
               class=" top-1 w-14 h-14"
             />
             <div class="text-white text-center font-bold text-5xl px-5">
-              {{ hiddenAnswer }}
+              <span style="letter-spacing:0.75rem">{{ hiddenAnswer }}</span>
             </div>
           </div>
           <div class="flex justify-center">
