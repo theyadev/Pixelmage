@@ -287,10 +287,8 @@ export default {
       this.$router.push({ path: "/" });
     }
 
-    this.socket.emit("GET CATEGORIES");
-
     this.socket.on("CATEGORIES", (categories) => {
-      if (this.host == true) {
+      if (this.host == true) {  
         this.categories = categories.map((e) => {
           return {
             name: e,
@@ -332,6 +330,8 @@ export default {
     this.socket.emit("UPDATE", {
       id: parseInt(this.id),
     });
+
+    this.socket.emit("GET CATEGORIES");
   },
   beforeRouteLeave(to, from, next) {
     if (to.name != "Jeu") this.quit();
@@ -346,6 +346,7 @@ export default {
       socket: this.$store.state.socket,
       id: parseInt(this.$route.query.id),
       categories: [],
+      starting: false,
       users: [],
       host: false,
       dropdownCategories: false,
@@ -445,7 +446,7 @@ export default {
       });
     },
     startGame() {
-      console.log(this.host);
+      if (this.starting) return
       if (!this.host) return;
       if (!this.anyActive()) {
         this.$toasted.error("Il faut mettre au moins une catégorie !", {
@@ -455,6 +456,7 @@ export default {
         });
         return;
       }
+      this.starting = true
       this.socket.emit("START", { id: this.id, categories: this.categories });
     },
     emitChangeColorInServer() {
