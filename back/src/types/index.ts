@@ -2,8 +2,13 @@ export type Answer = {
   url: string;
   answer: string;
   aliases: string[];
-  category: string;
+  categoryId: number;
 };
+
+export type Category = {
+  category: string;
+  id: number;
+}
 
 export type Message = {
   author: string;
