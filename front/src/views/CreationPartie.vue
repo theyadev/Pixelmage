@@ -65,7 +65,7 @@
                   },
                 }"
               >
-                <div>{{ inlineCategories()[0] }} <span v-if="inlineCategories().length - 1 > 0">+{{inlineCategories().length - 1 }}</span></div>
+                <div>{{ inlineCategories().length > 0 && inlineCategories()[0].length > 10? inlineCategories()[0].slice(0, 10) + "..." : inlineCategories()[0] }} <span v-if="inlineCategories().length - 1 > 0">+{{inlineCategories().length - 1 }}</span></div>
 
                 <svg
                   class="w-5 h-5 text-gray-600"
