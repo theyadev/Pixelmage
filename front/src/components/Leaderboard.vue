@@ -12,7 +12,7 @@
           :class="getColor(index)"
         >
           <div class="text-lg">{{ index }}<span class="font-bold">. {{getTopUsers()[index-1].username}} </span></div>
-          <div class="italic">(1050 points)</div>
+          <div class="italic">({{getTopUsers()[index-1].score}} points)</div>
         </div>
       </div>
     </div>
@@ -37,6 +37,8 @@ export default {
       }
     },
     getTopUsers(){
+      let sortedUsers = this.users;
+      sortedUsers.sort((a, b) => (a.score > b.score) ? 1 : -1);
       return this.users
     },
   },
