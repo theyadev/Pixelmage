@@ -11,7 +11,7 @@
           class="py-2 px-4 rounded-full my-2"
           :class="getColor(index)"
         >
-          <div class="text-lg">{{ index }}<span class="font-bold">. {{getTopUser(0)}} </span></div>
+          <div class="text-lg">{{ index }}<span class="font-bold">. {{getTopUsers()[index-1].username}} </span></div>
           <div class="italic">(1050 points)</div>
         </div>
       </div>
@@ -39,9 +39,6 @@ export default {
     getTopUsers(){
       return this.users
     },
-    getTopUser(index){
-      return this.getTopUsers()[index]
-    }
   },
 };
 </script>
