@@ -2,10 +2,11 @@
   <div class="main-container">
     <div class="overflow-x-hidden">
       <div class="flex flex-wrap justify-center mt-24 bg-black-800">
-        <div v-if="rooms.length == 0">
+        <div v-if="!rooms || rooms.length == 0">
           <h1 class="text-2xl font-bold text-white"> Oups, désolé il n'y a aucune partie en cours !</h1>
         </div>
         <div
+        v-else
           v-for="room in rooms"
           :key="room.id"
           class="flex flex-col px-4 py-3 mx-3 my-2 space-y-2 text-white bg-white rounded bg-opacity-10 w-60"
