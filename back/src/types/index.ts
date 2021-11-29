@@ -28,6 +28,7 @@ export type Room = {
   id: number;
   users: User[];
   categories: string[];
+  showCategories: boolean;
   currentRound: number;
   maxRounds: number;
   maxTime: number;

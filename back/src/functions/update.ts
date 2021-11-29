@@ -27,7 +27,7 @@ export default async function update(io: any, room: Room) {
     chat: room.chat,
     started: room.started,
     answer: currentAnswer ? everyoneAnswered(room) ? currentAnswer.answer : formatAnswer(currentAnswer.answer) : "",
-    category: currentAnswer? capitalize(categories.filter(e => e.id == currentAnswer.categoryId)[0].category) : "",
+    category: room.showCategories && currentAnswer? capitalize(categories.filter(e => e.id == currentAnswer.categoryId)[0].category) : "",
     image: currentAnswer? currentAnswer.url : undefined,
   });
 }

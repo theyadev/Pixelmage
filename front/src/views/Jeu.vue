@@ -44,7 +44,7 @@
                   Round {{ currentRound }} / {{ maxRound }}
                 </div>
               </div>
-              <div>
+              <div v-if="category">
                 <span class="text-white text-md">Catégorie : </span>
                 <span class="text-lg font-bold text-white">{{category}}</span>
               </div>

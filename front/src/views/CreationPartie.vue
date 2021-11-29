@@ -133,6 +133,15 @@
             </select>
           </div> -->
         </div>
+        <div class="flex items-center space-x-2">
+          <input
+            class="rounded border-opacity-20 focus:ring-transparent"
+            type="checkbox"
+            name="showCategories"
+            v-model="showCategories"
+          />
+          <div>Afficher les categories en jeu ?</div>
+        </div>
         <div class="w-full h-px bg-white"></div>
         <div class="grid grid-cols-6 gap-4">
           <div class="btn-leave" @click="leave">
@@ -276,28 +285,8 @@ export default {
       host: false,
       dropdownCategories: false,
       maxRounds: 5,
-      colors: [
-        "FF0000",
-        "FF3E00",
-        "FFD800",
-        "1FFF00",
-        "00FFCD",
-        "009BFF",
-        "004DFF",
-        "0008FF",
-        "6400FF",
-        "C500FF",
-        "FB71C3",
-        "D57700",
-        "BEE800",
-        "016A23",
-        "12003D",
-        "3D0038",
-        "4C0000",
-        "F09761",
-        "4F4640",
-        "9AA4CA",
-      ],
+      showCategories: true,
+      colors: ["red-500", "green-500"],
       colorIndexSelected: 0,
     };
   },
@@ -390,7 +379,7 @@ export default {
         return;
       }
       this.starting = true;
-      this.socket.emit("START", { id: this.id, categories: this.categories });
+      this.socket.emit("START", { id: this.id, categories: this.categories, showCategories: this.showCategories });
     },
     emitChangeColorInServer() {
       this.socket.emit("CHANGE COLOR", {

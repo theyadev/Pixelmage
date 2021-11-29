@@ -8,6 +8,7 @@ export default function getPublicRooms(Rooms: Map<number, Room>) {
             users: room.users,
             categories: room.categories,
             currentRound: room.currentRound,
+            showCategories: room.showCategories,
             maxRounds: room.maxRounds,
             maxTime: room.maxTime,
             started: room.started

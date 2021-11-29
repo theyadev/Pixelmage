@@ -57,7 +57,7 @@
           </div>
           <div class="flex items-center space-x-2">
             <svg
-              v-if="false"
+              v-if="room.showCategories"
               xmlns="http://www.w3.org/2000/svg"
               class="w-5 h-5 text-green-500"
               viewBox="0 0 20 20"
