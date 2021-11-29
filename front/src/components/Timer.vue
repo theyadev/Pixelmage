@@ -1,5 +1,8 @@
 <template>
-  <time :style="gradient"></time>
+  <time :style="gradient" class="flex items-center justify-center">
+    <span v-if="displayTime && current > 0" class="text-lg text-white">{{current.toFixed(1)}}</span>
+  </time>
+  
 </template>
 
 <script>
@@ -14,7 +17,7 @@ export default {
       tick: 20,
     };
   },
-  props: ["max", "current"],
+  props: ["max", "current", "displayTime"],
   watch: {
     max: function () {
       this.end = DateTime.local().plus({ seconds: this.max });
