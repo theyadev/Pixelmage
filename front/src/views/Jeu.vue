@@ -38,6 +38,7 @@
                 <Timer
                   :max="max"
                   :current="max - current"
+                  :displayTime="!roundEnded"
                   class="top-1 w-14 h-14"
                 />
                 <div class="text-white">
@@ -157,6 +158,8 @@ export default {
       function sortThing(a, b) {
         return b.score - a.score;
       }
+
+      this.roundEnded = room.roundEnded
 
       this.currentRound = room.currentRound;
       this.maxRound = room.maxRounds;
@@ -356,6 +359,7 @@ export default {
       hiddenAnswer: "",
       currentRound: 0,
       maxRound: 0,
+      roundEnded: false,
     };
   },
 };
