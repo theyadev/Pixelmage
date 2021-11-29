@@ -1,25 +1,11 @@
 <template>
-  <div class="flex flex-col h-screen w-screen bg-black bg-opacity-95">
-    <div class="bg-opacity-95 flex flex-grow items-center justify-center">
-      <div
-        class="
-          w-10/12
-          md:w-7/12
-          lg:w-2/5
-          rounded
-          shadow
-          bg-white bg-opacity-5
-          text-white
-          py-10
-          px-10
-          flex flex-col
-          space-y-5
-        "
-      >
+  <div class="main-container">
+    <div class="centered-in-container">
+      <div class="create-card">
         <div class="flex flex-col items-center">
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            class="h-16 w-16 mb-5"
+            class="w-16 h-16 mb-5"
             viewBox="0 0 20 20"
             fill="currentColor"
           >
@@ -39,22 +25,10 @@
         <div class="w-full h-px bg-white"></div>
         <div class="flex space-x-10">
           <div>
-            <div>Catégorie</div>
+            <div>Catégories</div>
             <div class="relative">
               <div
-                class="
-                  mt-2
-                  h-8
-                  bg-white
-                  text-black-900
-                  flex
-                  items-center
-                  justify-between
-                  px-4
-                  py-4
-                  w-40
-                  relative
-                "
+                class="categories-dropdown"
                 :class="[
                   dropdownCategories ? 'rounded-t' : 'rounded',
                   host ? 'cursor-pointer' : 'cursor-default opacity-60',
@@ -65,8 +39,12 @@
                   },
                 }"
               >
-                <div>{{ inlineCategories().length > 0 && inlineCategories()[0].length > 10? inlineCategories()[0].slice(0, 10) + "..." : inlineCategories()[0] }} <span v-if="inlineCategories().length - 1 > 0">+{{inlineCategories().length - 1 }}</span></div>
-
+                <div>
+                  {{ firstCategory }}
+                  <span v-if="inlineCategories().length - 1 > 0"
+                    >+{{ inlineCategories().length - 1 }}</span
+                  >
+                </div>
                 <svg
                   class="w-5 h-5 text-gray-600"
                   fill="none"
@@ -81,31 +59,17 @@
                     d="M19 9l-7 7-7-7"
                   ></path>
                 </svg>
-              </div>          
-              <div
-                v-if="dropdownCategories"
-                class="
-                  absolute
-                  bg-white
-                  rounded-b
-                  z-20
-                  text-black-900
-                  flex-col
-                  justify-between
-                  py-0.5
-                  w-40
-                  divide-y
-                "
-              >
+              </div>
+              <div v-if="dropdownCategories" class="categories-dropdown-bg">
                 <div
                   @click="checkAll"
-                  class="px-4 cursor-pointer flex justify-between"
+                  class="flex justify-between px-4 cursor-pointer"
                 >
                   <div>Tout</div>
                   <svg
                     v-if="allActive()"
                     xmlns="http://www.w3.org/2000/svg"
-                    class="h-6 w-6 text-green-600"
+                    class="w-6 h-6 text-green-600"
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke="currentColor"
@@ -122,7 +86,7 @@
                   v-for="categorie in categories"
                   :key="categorie.name"
                   @click="checkCategory(categorie)"
-                  class="px-4 cursor-pointer flex justify-between"
+                  class="flex justify-between px-4 cursor-pointer"
                 >
                   <div>
                     {{ categorie.name }}
@@ -130,7 +94,7 @@
                   <svg
                     v-if="categorie.active"
                     xmlns="http://www.w3.org/2000/svg"
-                    class="h-6 w-6 text-green-600"
+                    class="w-6 h-6 text-green-600"
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke="currentColor"
@@ -149,7 +113,7 @@
           <div>
             <div>Rounds</div>
             <select
-              class="text-black-900 rounded mt-2 py-1"
+              class="py-1 mt-2 rounded text-black-900"
               v-model="maxRounds"
               :disabled="!host"
               @change="updateGameMaxRounds"
@@ -159,36 +123,22 @@
           </div>
           <div>
             <div>Durée des rounds</div>
-              <select
-              class="text-black-900 rounded mt-2 py-1"
+            <select
+              class="py-1 mt-2 rounded text-black-900"
               v-model="maxRounds"
               :disabled="!host"
               @change="updateGameMaxRounds"
             >
-              <option v-for="i in 6" :key="i">{{ i*10 + 20 }}</option>
+              <option v-for="i in 6" :key="i">{{ i * 10 + 20 }}</option>
             </select>
           </div>
         </div>
         <div class="w-full h-px bg-white"></div>
         <div class="grid grid-cols-6 gap-4">
-          <div
-            class="
-              col-span-2
-              w-full
-              py-2
-              rounded
-              flex
-              bg-white bg-opacity-5
-              justify-center
-              items-center
-              space-x-2
-              cursor-pointer
-            "
-            @click="leave"
-          >
+          <div class="btn-leave" @click="leave">
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              class="h-5 w-5"
+              class="w-5 h-5"
               viewBox="0 0 20 20"
               fill="currentColor"
             >
@@ -200,23 +150,10 @@
             </svg>
             <div>Quitter</div>
           </div>
-          <div
-            class="
-              w-full
-              py-2
-              rounded
-              flex
-              bg-pink-500
-              justify-center
-              items-center
-              space-x-2
-              cursor-pointer
-            "
-            @click="copyLink"
-          >
+          <div class="btn-copy" @click="copyLink">
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              class="h-5 w-5"
+              class="w-5 h-5"
               viewBox="0 0 20 20"
               fill="currentColor"
             >
@@ -229,19 +166,7 @@
           <button
             :disabled="!host"
             v-on="{ [host ? 'click' : null]: startGame }"
-            class="
-              col-span-3
-              w-full
-              py-2
-              rounded
-              flex
-              bg-gradient-to-r
-              from-red-500
-              to-green-500
-              justify-center
-              cursor-pointer
-              disabled:opacity-70 disabled:cursor-default
-            "
+            class="btn-start"
           >
             Démarrer la partie
           </button>
@@ -259,7 +184,7 @@
             </div>
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              class="relative h-5 w-5 text-black-300 z-10"
+              class="relative z-10 w-5 h-5 text-black-300"
               :class="[users[i - 1] ? 'text-white cursor-pointer' : '']"
               viewBox="0 0 20 20"
               fill="currentColor"
@@ -288,15 +213,15 @@ export default {
     }
 
     this.socket.on("CATEGORIES", (categories) => {
-      if (this.host == true) {  
+      if (this.host == true) {
         this.categories = categories.map((e) => {
           return {
             name: e,
             active: false,
           };
         });
-      
-        this.updateCategories()
+
+        this.updateCategories();
       }
     });
 
@@ -376,8 +301,16 @@ export default {
       colorIndexSelected: 0,
     };
   },
+  computed: {
+    firstCategory: function () {
+      const categories = this.inlineCategories();
+      return categories.length > 0 && categories[0].length > 10
+        ? categories[0].slice(0, 10) + "..."
+        : categories[0];
+    },
+  },
   methods: {
-    updateCategories(){
+    updateCategories() {
       this.socket.emit("UPDATE CATEGORY", {
         categories: this.categories,
         id: this.id,
@@ -385,7 +318,7 @@ export default {
     },
     checkCategory(categorie) {
       categorie.active = !categorie.active;
-      this.updateCategories()
+      this.updateCategories();
     },
     inlineCategories() {
       let catNames = this.categories.map((e) => {
@@ -410,7 +343,7 @@ export default {
           e.active = true;
         });
       }
-      this.updateCategories()
+      this.updateCategories();
     },
     handleRefresh(event) {
       this.quit();
@@ -446,7 +379,7 @@ export default {
       });
     },
     startGame() {
-      if (this.starting) return
+      if (this.starting) return;
       if (!this.host) return;
       if (!this.anyActive()) {
         this.$toasted.error("Il faut mettre au moins une catégorie !", {
@@ -456,7 +389,7 @@ export default {
         });
         return;
       }
-      this.starting = true
+      this.starting = true;
       this.socket.emit("START", { id: this.id, categories: this.categories });
     },
     emitChangeColorInServer() {

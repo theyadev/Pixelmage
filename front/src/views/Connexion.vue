@@ -1,24 +1,12 @@
 <template>
-  <div class="flex flex-col h-screen w-screen bg-black bg-opacity-95">
-    <div class="bg-opacity-95 flex flex-grow items-center justify-center">
-      <div
-        class="
-          w-80
-          md:w-96
-          rounded
-          shadow
-          bg-white bg-opacity-5
-          text-white
-          py-10
-          px-10
-          flex flex-col
-        "
-      >
+  <div class="main-container">
+    <div class="centered-in-container">
+      <div class="connexion-card">
         <div class="flex flex-col items-center">
           <span class="text-xs">logo pixelmage</span>
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            class="h-16 w-16 mb-5"
+            class="w-16 h-16 mb-5"
             viewBox="0 0 20 20"
             fill="currentColor"
           >
@@ -48,14 +36,7 @@
             type="text"
             v-model="username"
             placeholder="e.g Theya"
-            class="
-              rounded
-              mb-3
-              border-none
-              w-full
-              bg-white bg-opacity-10
-              text-white
-            "
+            class="w-full mb-3 text-white bg-white border-none rounded bg-opacity-10"
           />
           <div v-if="game_id" @click="joinGame" class="btn-join-create">
             Rejoindre la partie
