@@ -163,12 +163,15 @@ export default {
     }
 
     this.socket.on("UPDATED", (room) => {
+      console.log("UPDATEEE");
       function sortThing(a, b) {
         return b.score - a.score;
       }
 
       this.roundEnded = room.roundEnded
       this.showLeaderboard = room.showLeaderboard
+
+      console.log(room.showLeaderboard);
 
       this.currentRound = room.currentRound;
       this.maxRound = room.maxRounds;
@@ -324,11 +327,13 @@ export default {
       return "#" + this.users[index].color;
     },
     handleRefresh(event) {
+      console.log("JE REFRESHE");
       this.quit();
       event.stopImmediatePropagation();
       event.preventDefault();
     },
     quit() {
+      console.log("JE QUITE");
       if (this.$store.state.username) {
         this.socket.emit("LEAVE", {
           name: this.$store.state.username,
@@ -338,14 +343,17 @@ export default {
       }
     },
     returnToLobby(){
+      console.log("JE RETURNE TOUT LE LOBI");
       this.$router.push({ path: "/create", query: { id: this.id } });
       return
     }
   },
   destroyed() {
+    console.log("JE SUIS DESTROYEE");
     window.removeEventListener("beforeunload", this.handleRefresh);
   },
   beforeRouteLeave(to, from, next) {
+    console.log("JE QUITTE LE TRUC");
     console.log(to.name);
     if (to.name != "Creation Partie") this.quit();
 
