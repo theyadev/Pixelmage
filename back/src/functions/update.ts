@@ -25,6 +25,7 @@ export default async function update(io: any, room: Room) {
     maxRounds: room.maxRounds,
     maxTime: room.maxTime,
     chat: room.chat,
+    roundEnded: room.roundEnded,
     started: room.started,
     answer: currentAnswer ? everyoneAnswered(room) ? currentAnswer.answer : formatAnswer(currentAnswer.answer) : "",
     category: room.showCategories && currentAnswer? capitalize(categories.filter(e => e.id == currentAnswer.categoryId)[0].category) : "",

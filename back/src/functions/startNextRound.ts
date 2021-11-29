@@ -13,6 +13,10 @@ export function everyoneAnswered(room: Room) {
  */
 export default function startNextRound(io: any, room: Room) {
   let i = 0;
+  room.roundEnded = false
+
+  update(io, room)
+
 
   let interval = setInterval(() => {
     i += 0.1;
@@ -36,6 +40,8 @@ export default function startNextRound(io: any, room: Room) {
 
 export function endRound(io: any, room: Room) {
   let i = 0;
+  
+  room.roundEnded = true
 
   resetAnswer(room, true)
 

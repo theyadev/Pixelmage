@@ -25,6 +25,7 @@ export default function Create(socket: Socket, Rooms: Map<number, Room>, io: Ser
       ],
       type: data.type,
       categories: [],
+      roundEnded: false,
       showCategories: true,
       currentRound: 1,
       maxRounds: 5,

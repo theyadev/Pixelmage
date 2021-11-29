@@ -27,6 +27,7 @@ export type User = {
 export type Room = {
   id: number;
   users: User[];
+  roundEnded: boolean;
   categories: string[];
   showCategories: boolean;
   currentRound: number;
