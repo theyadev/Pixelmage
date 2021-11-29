@@ -163,8 +163,6 @@ export default {
     }
 
     this.socket.on("UPDATED", (room) => {
-      // TODO: Verifier si le sort marche
-
       function sortThing(a, b) {
         return b.score - a.score;
       }
@@ -216,19 +214,13 @@ export default {
         this.pixelate((this.current / this.max) * 0.1);
       }
     });
-
-    this.socket.once("DISPLAY LEADERBOARD", () => {
-      console.log("DISPLAY LB");
-      this.leaderboard = true;
-      //this.$router.push({ path: "/create", query: { id: this.id } });
-    });
   },
   components: {
     Timer,
     Leaderboard,
   },
   methods: {
-    pixelate(scale, finished = false) {
+    pixelate(scale) {
       var canvas2 = document.getElementById("canvasInvisible");
       var canvas = document.getElementById("canvas");
 
