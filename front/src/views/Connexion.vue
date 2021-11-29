@@ -88,9 +88,7 @@
                 </div>
               </div>
             </div>
-            <div
-              class="flex items-center justify-center w-full py-2 space-x-2 bg-pink-500 rounded cursor-pointer "
-            >
+            <router-link to="/publics"  class="flex items-center justify-center w-full py-2 space-x-2 bg-pink-500 rounded cursor-pointer ">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 class="w-5 h-5"
@@ -104,7 +102,7 @@
                 />
               </svg>
               <span>Liste des parties publiques</span>
-            </div>
+            </router-link>
           </div>
         </div>
       </div>
