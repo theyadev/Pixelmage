@@ -38,11 +38,9 @@ class Cache {
     const categoriesDatabase = database.collection("categories");
     const imagesDatabase = database.collection("images");
 
-    const resCategories: any = await categoriesDatabase.find({}).toArray();
-    const categories: Category[] = resCategories;
+    const categories = await categoriesDatabase.find({}).toArray() as Category[];
 
-    const resImages: any = await imagesDatabase.find({}).toArray();
-    const images: Answer[] = resImages;
+    const images = await imagesDatabase.find({}).toArray() as Answer[];
 
     cache.categories = categories;
     cache.images = images;
