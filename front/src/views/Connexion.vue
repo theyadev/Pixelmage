@@ -64,7 +64,6 @@
                   </svg>
                   <span>Publique</span>
                 </div>
-                <!-- Cest good -->
                 <div
                   @click="createGame('private')"
                   class="flex items-center justify-center w-full py-2 space-x-2 bg-green-500 rounded cursor-pointer "
