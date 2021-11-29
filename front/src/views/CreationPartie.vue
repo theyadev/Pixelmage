@@ -437,7 +437,8 @@ export default {
       });
     },
     copyLink() {
-      const url = "https://www.pixelmage.tk/?id=" + this.id;
+      console.log(this.$store.state.BASE_URL);
+      const url = this.$store.state.BASE_URL + "/?id=" + this.id;
       navigator.clipboard.writeText(url);
       this.$toasted.success("Copied !", {
         theme: "toasted-primary",

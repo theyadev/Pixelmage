@@ -1,24 +1,28 @@
-import Vue from 'vue'
-import Vuex from 'vuex'
+import Vue from "vue";
+import Vuex from "vuex";
 import io from "socket.io-client";
 
-Vue.use(Vuex)
+Vue.use(Vuex);
+
+const PRODUCTION = process.env.NODE_ENV === "production";
+const PORT = process.env.PORT || 8080
+
+const BASE_URL = PRODUCTION
+  ? "https://www.pixelmage.tk"
+  : "http://localhost:" + PORT;
+
+const SERVER_URL = PRODUCTION
+  ? "pixelmage-back-f46xp.ondigitalocean.app"
+  : "http://localhost:8000";
 
 export default new Vuex.Store({
   state: {
+    BASE_URL,
     username: null,
-    socket: io("pixelmage-back-f46xp.ondigitalocean.app", {transports: ['websocket'], upgrade: false, closeOnBeforeunload: false}),
-    // socket: io("http://localhost:8000", {transports: ['websocket'], upgrade: false, closeOnBeforeunload: false}),
-    // socket: io("http://93.6.41.243:8271/", {transports: ['websocket'], upgrade: false, closeOnBeforeunload: false}),
-    connected: false,
+    socket: io(SERVER_URL, {
+      transports: ["websocket"],
+      upgrade: false,
+      closeOnBeforeunload: false,
+    }),
   },
-  mutations: {
-    connection(state) {
-      state.connected = true;
-    },
-  },
-  actions: {
-  },
-  modules: {
-  }
-})
+});
