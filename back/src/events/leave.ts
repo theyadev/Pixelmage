@@ -1,11 +1,12 @@
-import { Socket } from "socket.io";
+import { Server, Socket } from "socket.io";
 import { Room } from "../types";
 
 import update from "../functions/update";
 import getUserIndex from "../functions/getUserIndex";
+import getPublicRooms from "../functions/getPublicRooms";
 
 export default function Leave(
-  io: any,
+  io: Server,
   socket: Socket,
   Rooms: Map<number, Room>
 ) {
@@ -38,6 +39,11 @@ export default function Leave(
       // Is there's no one in the room, close the game
       if (room.users.length == 0) {
         Rooms.delete(data.id);
+        
+        const formattedRooms = getPublicRooms(Rooms)
+
+        io.emit("PUBLIC ROOMS", formattedRooms)
+        
         return;
       }
       room.users[0].host = true;

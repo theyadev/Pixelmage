@@ -2,8 +2,13 @@ export type Answer = {
   url: string;
   answer: string;
   aliases: string[];
-  category: string;
+  categoryId: number;
 };
+
+export type Category = {
+  category: string;
+  id: number;
+}
 
 export type Message = {
   author: string;
@@ -22,11 +27,14 @@ export type User = {
 export type Room = {
   id: number;
   users: User[];
+  roundEnded: boolean;
   categories: string[];
+  showCategories: boolean;
   currentRound: number;
   maxRounds: number;
   maxTime: number;
   chat: Message[];
+  type: "public" | "private";
   answers: Answer[];
   started: boolean;
   currentTime: number;

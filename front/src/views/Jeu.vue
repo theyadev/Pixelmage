@@ -1,28 +1,19 @@
 <template>
-  <div class="flex flex-col h-screen w-screen bg-black-600 bg-opacity-95 pt-20">
-    <div class="grid grid-cols-1 md:grid-cols-8 h-full">
+  <div class="flex flex-col w-screen h-screen pt-20 bg-black-600 bg-opacity-95">
+    <div class="grid h-full grid-cols-1 md:grid-cols-8">
       <div
-        class="
-          md:row-span-2 md:col-span-2
-          lg:col-span-1 lg:row-span-1
-          bg-red-500
-          flex flex-col
-          items-center
-          space-y-4
-          py-5
-          px-2
-        "
+        class="flex flex-col items-center px-2 py-5 space-y-4 bg-red-500 md:row-span-2 md:col-span-2 lg:col-span-1 lg:row-span-1"
       >
         <div
           v-for="user in users"
           :key="user.username"
-          class="py-2 px-6 bg-white rounded w-full flex flex-col items-center"
-          :class="user.answered ?'bg-green-500' :''"
+          class="flex flex-col items-center w-full px-6 py-2 bg-white rounded"
+          :class="user.answered ? 'bg-green-500' : ''"
         >
           <div class="flex items-center space-x-1">
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              class="h-5 w-5"
+              class="w-5 h-5"
               viewBox="0 0 20 20"
               fill="currentColor"
             >
@@ -39,46 +30,60 @@
         </div>
       </div>
 
-      <div class="md:col-span-6 lg:col-span-5 bg-black-600 pb-10 lg:pb-0">
-        <div v-if="leaderboard" class="flex flex-col items-center justify-center pt-5 space-y-8">
-          <div class="relative flex flex-col items-center text-center">
-            <Timer
-              :max="max"
-              :current="max - current"
-              class=" top-1 w-14 h-14"
-            />
-            <div class="text-white text-center font-bold text-5xl px-5">
-              {{ hiddenAnswer }}
+
+      <div class="pb-10 md:col-span-6 lg:col-span-5 bg-black-600 lg:pb-0">
+        <div class="flex flex-col items-center justify-center pt-5 space-y-8">
+          <div class="flex flex-col items-center w-full text-center ">
+            <div class="flex items-center justify-between w-full px-16 space-x-2 lg:px-48">
+              <div class="flex items-center space-x-3">
+                <Timer
+                  :max="max"
+                  :current="max - current"
+                  :displayTime="!roundEnded"
+                  class="top-1 w-14 h-14"
+                />
+                <div class="text-white">
+                  Round {{ currentRound }} / {{ maxRound }}
+                </div>
+              </div>
+              <div v-if="category">
+                <span class="text-white text-md">Catégorie : </span>
+                <span class="text-lg font-bold text-white">{{category}}</span>
+              </div>
+            </div>
+            <div class="px-5 text-5xl font-bold text-center text-white">
+              <span style="letter-spacing: 0.75rem">{{ hiddenAnswer }}</span>
+
             </div>
           </div>
           <div class="flex justify-center">
             <canvas
               id="canvas"
-              class="w-8/12 rounded-lg object-contain lg:max-h-96"
+              class="object-contain w-8/12 rounded-lg lg:max-h-96"
             />
             <canvas
               id="canvasInvisible"
-              class="w-8/12 rounded-lg object-contain lg:max-h-96 hidden"
+              class="hidden object-contain w-8/12 rounded-lg lg:max-h-96"
             />
           </div>
           <form
             @submit.prevent="submitAnswer"
-            class="w-full flex justify-center"
+            class="flex justify-center w-full"
           >
             <input
               v-model="reponse"
               type="text"
-              class="rounded-full w-5/12 text-center font-medium"
+              class="w-5/12 font-medium text-center rounded-full"
             />
           </form>
         </div>
         <Leaderboard v-else :users="users" />
       </div>
       <div
-        class="md:col-span-6 lg:col-span-2 flex flex-col bg-black-400 px-5 py-5"
+        class="flex flex-col px-5 py-5 md:col-span-6 lg:col-span-2 bg-black-400"
       >
         <div
-          class="flex-grow h-80 overflow-y-auto mb-5 space-y-5 hide-scroll"
+          class="flex-grow mb-5 space-y-5 overflow-y-auto h-80 hide-scroll"
           id="chat"
         >
           <div
@@ -94,7 +99,7 @@
                 >{{ message.author }}</span
               >
               <div
-                class="py-2 px-4 rounded-lg flex justify-center"
+                class="flex justify-center px-4 py-2 rounded-lg"
                 :class="
                   message.author == username
                     ? 'bg-white rounded-bl-2xl'
@@ -108,18 +113,10 @@
           </div>
         </div>
         <div class="relative flex items-center justify-end">
-          <form @submit.prevent="sendMessage" class="w-full flex items-center">
+          <form @submit.prevent="sendMessage" class="flex items-center w-full">
             <button
               type="submit"
-              class="
-                absolute
-                right-2
-                cursor-pointer
-                rounded-lg
-                transition
-                duration-500
-                hover:bg-black-50 hover:bg-opacity-50
-              "
+              class="absolute transition duration-500 rounded-lg cursor-pointer right-2 hover:bg-black-50 hover:bg-opacity-50"
             >
               <svg
                 class="w-7 h-7"
@@ -138,7 +135,7 @@
             </button>
 
             <input
-              class="px-4 py-1 w-full rounded-lg pr-10"
+              class="w-full px-4 py-1 pr-10 rounded-lg"
               v-model="message"
             />
           </form>
@@ -166,9 +163,16 @@ export default {
         return b.score - a.score;
       }
 
+      this.roundEnded = room.roundEnded
+
+      this.currentRound = room.currentRound;
+      this.maxRound = room.maxRounds;
+
       this.users = room.users.sort(sortThing);
 
       this.chat = room.chat;
+
+      this.category = room.category
 
       const img = new Image();
 
@@ -187,10 +191,9 @@ export default {
 
       // Scroll at the end of the chat
       const chatDiv = document.getElementById("chat");
-      setTimeout(()=>{
-        chatDiv.scrollTop = chatDiv.scrollHeight
-      },0)
-      
+      setTimeout(() => {
+        chatDiv.scrollTop = chatDiv.scrollHeight;
+      }, 0);
     });
 
     this.socket.emit("UPDATE", {
@@ -307,6 +310,9 @@ export default {
       this.reponse = "";
     },
     sendMessage() {
+      if (this.message.trim() == "") {
+        return;
+      }
       this.socket.emit("MESSAGE", {
         id: this.id,
         username: this.username,
@@ -353,10 +359,13 @@ export default {
       chat: null,
       image: "",
       reponse: "",
+      category: "",
       message: "",
       answer: "",
       hiddenAnswer: "",
-      leaderboard: false,
+      currentRound: 0,
+      maxRound: 0,
+      roundEnded: false,
     };
   },
 };

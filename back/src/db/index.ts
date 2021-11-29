@@ -1,6 +1,7 @@
 import Mongoose from "mongoose";
 
 import { config } from "dotenv";
+import { Answer, Category } from "../types";
 
 config();
 
@@ -15,7 +16,42 @@ async function connect() {
   database = Mongoose.connection;
 }
 
-function randomSort(a: any, b: any) {
+class Cache {
+  date?: Date;
+  images: Answer[];
+  categories: Category[];
+
+  constructor() {
+    this.images = [];
+    this.categories = [];
+  }
+
+  isRecent() {
+    return (
+      this.date && this.date >= new Date(new Date().getTime() - 10 * 60000)
+    );
+  }
+
+  async update() {
+    await connect();
+
+    const categoriesDatabase = database.collection("categories");
+    const imagesDatabase = database.collection("images");
+
+    const categories = await categoriesDatabase.find({}).toArray() as Category[];
+
+    const images = await imagesDatabase.find({}).toArray() as Answer[];
+
+    cache.categories = categories;
+    cache.images = images;
+
+    cache.date = new Date();
+  }
+}
+
+const cache = new Cache();
+
+function randomSort() {
   return Math.random() - 0.5;
 }
 
@@ -26,25 +62,23 @@ function getRandomItems(list: any[], nb: number) {
 }
 
 export async function getCategories() {
-  await connect();
+  if (!cache.isRecent()) {
+    await cache.update();
+  }
 
-  const categoriesDatabase = database.collection("categories");
-
-  return await categoriesDatabase.find({}).toArray()
+  return cache.categories;
 }
 
 async function getCategoriesIds(categoriesNames: string[]) {
-  const categoriesDatabase = database.collection("categories");
+  if (!cache.isRecent()) {
+    await cache.update();
+  }
 
-  const categories = await categoriesDatabase
-    .find({
-      category: {
-        $in: categoriesNames,
-      },
-    })
-    .toArray();
+  const filteredCategories = cache.categories.filter((e) =>
+    categoriesNames.includes(e.category)
+  );
 
-  const categoriesIds: number[] = categories.map((e) => {
+  const categoriesIds: number[] = filteredCategories.map((e) => {
     return e.id;
   });
 
@@ -52,19 +86,13 @@ async function getCategoriesIds(categoriesNames: string[]) {
 }
 
 export async function getImages(categoriesFilters: string[], nb: number) {
-  await connect();
-
-  const imagesDatabase = database.collection("images");
+  if (!cache.isRecent()) {
+    await cache.update();
+  }
 
   const categories = await getCategoriesIds(categoriesFilters);
 
-  const images = await imagesDatabase
-    .find({
-      categoryId: {
-        $in: categories,
-      },
-    })
-    .toArray();
+  const images = cache.images.filter((e) => categories.includes(e.categoryId));
 
   return getRandomItems(images, nb);
 }

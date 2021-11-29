@@ -2,18 +2,54 @@
 @tailwind components;
 @tailwind utilities;
 
+.main-container {
+  @apply flex flex-col w-screen h-screen bg-opacity-95;
+}
+
+.centered-in-container {
+  @apply flex items-center justify-center flex-grow bg-opacity-95;
+}
+
 .btn-nav {
-    @apply px-2 py-1.5 transition duration-200 hover:bg-black-500 rounded-lg border-2 border-opacity-0 hover:border-opacity-50 
+  @apply px-2 py-1.5 transition duration-200 hover:bg-black-500 rounded-lg border-2 border-opacity-0 hover:border-opacity-50;
 }
 
 .btn-join-create {
-    @apply w-full py-2 rounded flex bg-gradient-to-r from-red-500 to-green-500 justify-center cursor-pointer
+  @apply w-full py-2 rounded flex bg-gradient-to-r from-red-500 to-green-500 justify-center cursor-pointer;
+}
+
+.btn-start {
+    @apply flex justify-center w-full col-span-3 py-2 rounded cursor-pointer bg-gradient-to-r from-red-500 to-green-500 disabled:opacity-70 disabled:cursor-default
+}
+
+.btn-leave {
+    @apply flex items-center justify-center w-full col-span-2 py-2 space-x-2 bg-white rounded cursor-pointer bg-opacity-5
+}
+
+.btn-copy {
+    @apply flex items-center justify-center w-full py-2 space-x-2 bg-pink-500 rounded cursor-pointer
 }
 
 .btn {
-    @apply ring-1 relative shadow-md cursor-pointer px-10 py-1 bg-black-800 rounded-full transition duration-500 focus:ring focus-within:ring-opacity-50 focus:shadow-lg
+  @apply ring-1 relative shadow-md cursor-pointer px-10 py-1 bg-black-800 rounded-full transition duration-500 focus:ring focus-within:ring-opacity-50 focus:shadow-lg;
 }
 
 .icon-tooltip {
-    @apply absolute bottom-7 bg-white px-2 py-0.5 rounded-lg opacity-0 pointer-events-none transition duration-300 transform translate-y-7 scale-50 group-hover:opacity-100 group-hover:-translate-y-0 group-hover:scale-100
+  @apply absolute bottom-7 bg-white px-2 py-0.5 rounded-lg opacity-0 pointer-events-none transition duration-300 transform translate-y-7 scale-50 group-hover:opacity-100 group-hover:-translate-y-0 group-hover:scale-100;
+}
+
+.connexion-card {
+  @apply w-80 md:w-96 rounded shadow bg-white bg-opacity-5 text-white py-10 px-10 flex flex-col;
+}
+
+.create-card {
+  @apply flex flex-col w-10/12 px-10 py-10 space-y-5 text-white bg-white rounded shadow md:w-7/12 lg:w-2/5 bg-opacity-5;
+}
+
+.categories-dropdown {
+  @apply relative flex items-center justify-between w-40 h-8 px-4 py-4 mt-2 bg-white text-black-900;
+}
+
+.categories-dropdown-bg {
+  @apply absolute bg-white rounded-b z-20 text-black-900 flex-col justify-between py-0.5 w-40 divide-y;
 }
