@@ -121,17 +121,17 @@
               <option v-for="i in 6" :key="i">{{ i + 4 }}</option>
             </select>
           </div>
-          <!-- <div>
+          <div>
             <div>Durée des rounds</div>
             <select
               class="py-1 mt-2 rounded text-black-900"
-              v-model="maxRounds"
+              v-model="maxTime"
               :disabled="!host"
-              @change="updateGameMaxRounds"
+              @change="updateGameMaxTime"
             >
               <option v-for="i in 6" :key="i">{{ i * 10 + 20 }}</option>
             </select>
-          </div> -->
+          </div>
         </div>
         <div class="flex items-center space-x-2">
           <input
@@ -234,6 +234,10 @@ export default {
       }
     });
 
+    this.socket.once("UPDATED", (room) => {
+      this.socket.emit("GET CATEGORIES");
+    })
+
     this.socket.on("UPDATED", (room) => {
       if (room.started == true) {
         this.socket.off("UPDATED");
@@ -244,6 +248,7 @@ export default {
       let users = room.users;
 
       this.maxRounds = room.maxRounds;
+      this.maxTime = room.maxTime;
       this.categories = room.categories;
 
       for (let i = 0; i < 20; i++) {
@@ -265,7 +270,7 @@ export default {
       id: parseInt(this.id),
     });
 
-    this.socket.emit("GET CATEGORIES");
+    
   },
   beforeRouteLeave(to, from, next) {
     if (to.name != "Jeu") this.quit();
@@ -285,6 +290,7 @@ export default {
       host: false,
       dropdownCategories: false,
       maxRounds: 5,
+      maxTime: 30,
       showCategories: true,
       colors: ["red-500", "green-500"],
       colorIndexSelected: 0,
@@ -358,6 +364,12 @@ export default {
         id: this.id,
       });
     },
+    updateGameMaxTime(event) {
+      this.socket.emit("UPDATE MAX TIME", {
+        maxTime: event.target.value,
+        id: this.id,
+      });
+    },
     copyLink() {
       const url = this.$store.state.BASE_URL + "/?id=" + this.id;
       navigator.clipboard.writeText(url);
@@ -379,7 +391,11 @@ export default {
         return;
       }
       this.starting = true;
-      this.socket.emit("START", { id: this.id, categories: this.categories, showCategories: this.showCategories });
+      this.socket.emit("START", {
+        id: this.id,
+        categories: this.categories,
+        showCategories: this.showCategories,
+      });
     },
     emitChangeColorInServer() {
       this.socket.emit("CHANGE COLOR", {
