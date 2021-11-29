@@ -6,13 +6,13 @@
       </div>
       <div class="flex flex-col items-center pt-5">
         <div
-          v-for="index in getTopUsers().length"
+          v-for="index in users.length"
           :key="index"
           class="py-2 px-4 rounded-full my-2"
           :class="getColor(index)"
         >
-          <div class="text-lg">{{ index }}<span class="font-bold">. {{getTopUsers()[index-1].username}} </span></div>
-          <div class="italic">({{getTopUsers()[index-1].score}} points)</div>
+          <div class="text-lg">{{ index }}<span class="font-bold">. {{users[index-1].username}} </span></div>
+          <div class="italic">({{users[index-1].score}} points)</div>
         </div>
       </div>
     </div>
@@ -35,11 +35,6 @@ export default {
         default:
           return "bg-white bg-opacity-10 w-1/4";
       }
-    },
-    getTopUsers(){
-      let sortedUsers = this.users;
-      sortedUsers.sort((a, b) => (a.score < b.score) ? 1 : -1);
-      return this.users
     },
   },
 };
