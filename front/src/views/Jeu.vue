@@ -77,7 +77,7 @@
             />
           </form>
         </div>
-        <div v-else :users="users" class="flex flex-col items-center">
+        <div v-else class="flex flex-col items-center">
           <Leaderboard class="w-full" :users="users" />
           <button class=" mt-10 bg-gray-200 rounded py-2 px-3" @click="returnToLobby">
               Retourner au lobby
@@ -170,7 +170,7 @@ export default {
       }
 
       this.roundEnded = room.roundEnded
-      // this.showLeaderboard = room.showLeaderboard
+      this.showLeaderboard = room.showLeaderboard
 
       this.currentRound = room.currentRound;
       this.maxRound = room.maxRounds;
