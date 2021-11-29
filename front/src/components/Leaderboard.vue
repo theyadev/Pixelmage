@@ -6,12 +6,12 @@
       </div>
       <div class="flex flex-col items-center pt-5">
         <div
-          v-for="index in 5"
+          v-for="index in getTopUsers().length"
           :key="index"
           class="py-2 px-4 rounded-full my-2"
           :class="getColor(index)"
         >
-          <div class="text-lg">{{ index }}<span class="font-bold">. Dark </span></div>
+          <div class="text-lg">{{ index }}<span class="font-bold">. {{getTopUser(0)}} </span></div>
           <div class="italic">(1050 points)</div>
         </div>
       </div>
@@ -36,6 +36,12 @@ export default {
           return "bg-white bg-opacity-10 w-1/4";
       }
     },
+    getTopUsers(){
+      return this.users
+    },
+    getTopUser(index){
+      return this.getTopUsers()[index]
+    }
   },
 };
 </script>

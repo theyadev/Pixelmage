@@ -2,7 +2,7 @@ import { Server, Socket } from "socket.io";
 import { Room } from "../types";
 
 import update from "../functions/update";
-import { resetAnswer } from "../functions/resets";
+import { resetAnswer, resetScore } from "../functions/resets";
 import startNextRound from "../functions/startNextRound";
 import { getImages } from "../db";
 import getPublicRooms from "../functions/getPublicRooms";
@@ -30,6 +30,7 @@ export default function Start(
     console.log(`${room.id} -> STARTING !`);
 
     resetAnswer(room, false);
+    resetScore(room);
 
     room.started = true;
 

@@ -32,7 +32,7 @@
 
 
       <div class="pb-10 md:col-span-6 lg:col-span-5 bg-black-600 lg:pb-0">
-        <div class="flex flex-col items-center justify-center pt-5 space-y-8">
+        <div class="flex flex-col items-center justify-center pt-5 space-y-8" v-if="!showLeaderboard">
           <div class="flex flex-col items-center w-full text-center ">
             <div class="flex items-center justify-between w-full px-16 space-x-2 lg:px-48">
               <div class="flex items-center space-x-3">
@@ -77,7 +77,12 @@
             />
           </form>
         </div>
-        <Leaderboard v-else :users="users" />
+        <div v-else :users="users" class="flex flex-col items-center">
+          <Leaderboard class="w-full" :users="users" />
+          <button class=" mt-10 bg-gray-200 rounded py-2 px-3" @click="returnToLobby">
+              Retourner au lobby
+          </button>
+        </div>
       </div>
       <div
         class="flex flex-col px-5 py-5 md:col-span-6 lg:col-span-2 bg-black-400"
@@ -156,6 +161,11 @@ export default {
     if (this.$store.state.username == null) {
       this.$router.push({ path: "/" });
     }
+// Bon aller moi je rentre chez moi, bisous !
+    this.socket.on("DISPLAY LEADERBOARD", () =>{
+      this.showLeaderboard = true
+    })
+
     this.socket.on("UPDATED", (room) => {
       // TODO: Verifier si le sort marche
 
@@ -338,6 +348,10 @@ export default {
         this.$store.state.username = null;
       }
     },
+    returnToLobby(){
+      this.$router.push({ path: "/create", query: { id: this.id } });
+      return
+    }
   },
   destroyed() {
     window.removeEventListener("beforeunload", this.handleRefresh);
@@ -366,6 +380,7 @@ export default {
       currentRound: 0,
       maxRound: 0,
       roundEnded: false,
+      showLeaderboard: false,
     };
   },
 };

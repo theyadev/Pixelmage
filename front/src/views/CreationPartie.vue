@@ -118,7 +118,7 @@
               :disabled="!host"
               @change="updateGameMaxRounds"
             >
-              <option v-for="i in 6" :key="i">{{ i + 4 }}</option>
+              <option v-for="i in 6" :key="i">{{ i}}</option>
             </select>
           </div>
           <div>
@@ -129,7 +129,7 @@
               :disabled="!host"
               @change="updateGameMaxTime"
             >
-              <option v-for="i in 6" :key="i">{{ i * 10 + 20 }}</option>
+              <option v-for="i in 6" :key="i">{{ i}}</option>
             </select>
           </div>
         </div>
