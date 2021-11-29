@@ -121,7 +121,7 @@
               <option v-for="i in 6" :key="i">{{ i + 4 }}</option>
             </select>
           </div>
-          <div>
+          <!-- <div>
             <div>Durée des rounds</div>
             <select
               class="py-1 mt-2 rounded text-black-900"
@@ -131,7 +131,7 @@
             >
               <option v-for="i in 6" :key="i">{{ i * 10 + 20 }}</option>
             </select>
-          </div>
+          </div> -->
         </div>
         <div class="w-full h-px bg-white"></div>
         <div class="grid grid-cols-6 gap-4">
