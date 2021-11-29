@@ -2,7 +2,7 @@ import { Server, Socket } from "socket.io";
 import { Room } from "../types";
 
 import update from "../functions/update";
-import { resetAnswer, resetScore } from "../functions/resets";
+import { resetAnswer, resetScore, resetLeaderboard } from "../functions/resets";
 import startNextRound from "../functions/startNextRound";
 import { getImages } from "../db";
 import getPublicRooms from "../functions/getPublicRooms";
@@ -31,6 +31,7 @@ export default function Start(
 
     resetAnswer(room, false);
     resetScore(room);
+    
 
     room.started = true;
 

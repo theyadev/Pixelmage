@@ -174,6 +174,7 @@ export default {
       }
 
       this.roundEnded = room.roundEnded
+      this.showLeaderboard = room.showLeaderboard
 
       this.currentRound = room.currentRound;
       this.maxRound = room.maxRounds;

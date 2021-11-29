@@ -64,8 +64,8 @@ export function endRound(io: any, room: Room) {
       if (room.maxRounds <= room.currentRound - 1) {
 
         resetRoom(room);
-        resetScore(room);
         
+        update(io, room, true);
 
         console.log(`${room.id} -> FIN DE LA PARTIE !`);
         
