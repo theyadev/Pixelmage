@@ -161,7 +161,6 @@ export default {
     if (this.$store.state.username == null) {
       this.$router.push({ path: "/" });
     }
-// Bon aller moi je rentre chez moi, bisous !
 
     this.socket.on("UPDATED", (room) => {
       // TODO: Verifier si le sort marche
@@ -171,7 +170,7 @@ export default {
       }
 
       this.roundEnded = room.roundEnded
-      this.showLeaderboard = room.showLeaderboard
+      // this.showLeaderboard = room.showLeaderboard
 
       this.currentRound = room.currentRound;
       this.maxRound = room.maxRounds;
