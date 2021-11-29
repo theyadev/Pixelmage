@@ -162,9 +162,6 @@ export default {
       this.$router.push({ path: "/" });
     }
 // Bon aller moi je rentre chez moi, bisous !
-    this.socket.on("DISPLAY LEADERBOARD", () =>{
-      this.showLeaderboard = true
-    })
 
     this.socket.on("UPDATED", (room) => {
       // TODO: Verifier si le sort marche

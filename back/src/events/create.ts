@@ -27,6 +27,7 @@ export default function Create(socket: Socket, Rooms: Map<number, Room>, io: Ser
       categories: [],
       roundEnded: false,
       showCategories: true,
+      showLeaderboard: false,
       currentRound: 1,
       maxRounds: 5,
       maxTime: 30,

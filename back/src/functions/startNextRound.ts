@@ -59,18 +59,19 @@ export function endRound(io: any, room: Room) {
 
       resetAnswer(room, false);
 
-      update(io, room);
+      
 
       if (room.maxRounds <= room.currentRound - 1) {
 
         resetRoom(room);
         
-        update(io, room, true);
+        room.showLeaderboard = true
+        update(io, room);
 
         console.log(`${room.id} -> FIN DE LA PARTIE !`);
         
-        return io.sockets.in(room.id).emit("DISPLAY LEADERBOARD");
       } else {
+        update(io, room);
         console.log(`${room.id} -> ROUND SUIVANT !`);
 
         startNextRound(io, room);

@@ -34,6 +34,7 @@ export type Room = {
   maxRounds: number;
   maxTime: number;
   chat: Message[];
+  showLeaderboard: boolean;
   type: "public" | "private";
   answers: Answer[];
   started: boolean;
