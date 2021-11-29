@@ -1,18 +1,19 @@
-import { Socket } from "socket.io";
+import { Server, Socket } from "socket.io";
 import { Room } from "../types";
 
 import update from "../functions/update";
 import { resetAnswer } from "../functions/resets";
 import startNextRound from "../functions/startNextRound";
 import { getImages } from "../db";
-
+import getPublicRooms from "../functions/getPublicRooms";
 
 type Category = {
   name: string;
   active: boolean
 }
+
 export default function Start(
-  io: any,
+  io: Server,
   socket: Socket,
   Rooms: Map<number, Room>
 ) {
@@ -41,5 +42,11 @@ export default function Start(
     update(io, room);
 
     startNextRound(io, room);
+
+    if (room.type=="private") return;
+
+    const formattedRooms = getPublicRooms(Rooms)
+
+    io.emit("PUBLIC ROOMS", formattedRooms)
   });
 }
