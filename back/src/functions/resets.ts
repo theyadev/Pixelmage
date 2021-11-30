@@ -4,9 +4,9 @@ import { Room } from "../types";
 /**
  * Reset all User answered in a room
  */
-export function resetAnswer(room: Room, value: boolean) {
+export function resetAnswer(room: Room) {
   for (let i = 0; i < room.users.length; i++) {
-    room.users[i].answered = value;
+    room.users[i].answered = false;
   }
 
 }

@@ -29,7 +29,7 @@ export default function Start(
 
     console.log(`${room.id} -> STARTING !`);
 
-    resetAnswer(room, false);
+    resetAnswer(room);
     resetScore(room);
     
 
