@@ -26,6 +26,7 @@ export default async function update(io: any, room: Room) {
     maxTime: room.maxTime,
     chat: room.chat,
     roundEnded: room.roundEnded,
+    showCategories: room.showCategories,
     showLeaderboard: room.showLeaderboard,
     started: room.started,
     answer: currentAnswer ? everyoneAnswered(room) ? currentAnswer.answer : formatAnswer(currentAnswer.answer) : "",

@@ -135,10 +135,12 @@
         </div>
         <div class="flex items-center space-x-2">
           <input
-            class="rounded border-opacity-20 focus:ring-transparent"
+            :disabled="!host"
+            class="rounded border-opacity-20 focus:ring-transparent disabled:opacity-70"
             type="checkbox"
             name="showCategories"
             v-model="showCategories"
+            @change="updateGameShowCategories"
           />
           <div>Afficher les categories en jeu ?</div>
         </div>
@@ -249,6 +251,7 @@ export default {
 
       this.maxRounds = room.maxRounds;
       this.maxTime = room.maxTime;
+      this.showCategories = room.showCategories
       this.categories = room.categories;
 
       for (let i = 0; i < 20; i++) {
@@ -274,7 +277,8 @@ export default {
   },
   beforeRouteLeave(to, from, next) {
     if (to.name != "Jeu") this.quit();
-
+    
+    this.socket.removeAllListeners();
     next();
   },
   destroyed() {
@@ -358,6 +362,12 @@ export default {
         this.$store.state.username = null;
       }
     },
+    updateGameShowCategories() {
+      this.socket.emit("UPDATE SHOW CATEGORIES", {
+        showCategories: this.showCategories,
+        id: this.id,
+      });    
+    },
     updateGameMaxRounds(event) {
       this.socket.emit("UPDATE MAX ROUNDS", {
         maxRounds: event.target.value,
@@ -393,8 +403,7 @@ export default {
       this.starting = true;
       this.socket.emit("START", {
         id: this.id,
-        categories: this.categories,
-        showCategories: this.showCategories,
+        categories: this.categories
       });
     },
     emitChangeColorInServer() {

@@ -36,8 +36,6 @@ export default function Start(
     room.started = true;
     room.showLeaderboard = false;
 
-    room.showCategories = data.showCategories
-
     const categories: string[] = data.categories.filter((e: any) => e.active === true).map((e: Category) => {
       return e.name.toLowerCase().replace(/'/g, "''")
     })

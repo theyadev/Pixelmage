@@ -19,6 +19,7 @@ import Update from "./events/update";
 import getCategories from "./events/get_categories";
 import GetPublicRooms from "./events/get_public_rooms";
 import UpdateMaxTime from "./events/update_max_time";
+import UpdateShowCategories from "./events/update_show_categories";
 
 const app = express();
 
@@ -56,6 +57,8 @@ io.on("connection", function (socket: Socket) {
   UpdateCategory(io, socket, Rooms);
 
   UpdateMaxRounds(io, socket, Rooms);
+  
+  UpdateShowCategories(io, socket, Rooms)
 
   UpdateMaxTime(io, socket, Rooms)
 
