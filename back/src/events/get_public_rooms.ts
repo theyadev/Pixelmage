@@ -9,9 +9,9 @@ export default function GetPublicRooms(
   /**
    * When someone ask for Rooms
    */
-  const formattedRooms = updatePublicRooms(Rooms);
+  socket.on("GET PUBLIC ROOMS", async function () {
+    const formattedRooms = updatePublicRooms(Rooms);
 
-  socket.emit("PUBLIC ROOMS", formattedRooms)   
-
-  socket.on("GET PUBLIC ROOMS", async function () {});
+    socket.emit("PUBLIC ROOMS", formattedRooms);
+  });
 }
