@@ -38,9 +38,11 @@ class Cache {
     const categoriesDatabase = database.collection("categories");
     const imagesDatabase = database.collection("images");
 
-    const categories = await categoriesDatabase.find({}).toArray() as Category[];
+    const categories = (await categoriesDatabase
+      .find({})
+      .toArray()) as Category[];
 
-    const images = await imagesDatabase.find({}).toArray() as Answer[];
+    const images = (await imagesDatabase.find({}).toArray()) as Answer[];
 
     cache.categories = categories;
     cache.images = images;
@@ -55,10 +57,35 @@ function randomSort() {
   return Math.random() - 0.5;
 }
 
-function getRandomItems(list: any[], nb: number) {
-  const randomSorted = list.sort(randomSort);
+function getNumbersOfEach(categories: Category[], nb: number) {
+  let numbers = categories.map((e) => {
+    return Math.floor(nb / categories.length);
+  });
 
-  return randomSorted.splice(0, nb);
+  for (let i = 0; i < nb % categories.length; i++) {
+    numbers[i] += 1;
+  }
+
+  return numbers
+}
+
+function getRandomImages(categories: Category[], images: Answer[], nb: number) {
+  const randomImages = images.sort(randomSort);
+  const randomCategories = categories.sort(randomSort)
+
+  const numbers = getNumbersOfEach(randomCategories, nb)
+
+  let resImages: Answer[] = [];
+
+  const randomImagesList = randomCategories.map((category) => {
+    return randomImages.filter((image) => image.categoryId == category.id);
+  });
+
+  for (let i = 0; i < numbers.length; i++) {
+    resImages = resImages.concat(randomImagesList[i].splice(0, numbers[i]));
+  }
+
+  return resImages;
 }
 
 export async function getCategories() {
@@ -69,7 +96,7 @@ export async function getCategories() {
   return cache.categories;
 }
 
-async function getCategoriesIds(categoriesNames: string[]) {
+async function getFilterCategories(categoriesNames: string[]) {
   if (!cache.isRecent()) {
     await cache.update();
   }
@@ -78,11 +105,7 @@ async function getCategoriesIds(categoriesNames: string[]) {
     categoriesNames.includes(e.category)
   );
 
-  const categoriesIds: number[] = filteredCategories.map((e) => {
-    return e.id;
-  });
-
-  return categoriesIds;
+  return filteredCategories;
 }
 
 export async function getImages(categoriesFilters: string[], nb: number) {
@@ -90,9 +113,7 @@ export async function getImages(categoriesFilters: string[], nb: number) {
     await cache.update();
   }
 
-  const categories = await getCategoriesIds(categoriesFilters);
+  const categories = await getFilterCategories(categoriesFilters);
 
-  const images = cache.images.filter((e) => categories.includes(e.categoryId));
-
-  return getRandomItems(images, nb);
+  return getRandomImages(categories, cache.images, nb);
 }
