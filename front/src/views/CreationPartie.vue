@@ -118,7 +118,7 @@
               :disabled="!host"
               @change="updateGameMaxRounds"
             >
-              <option v-for="i in 6" :key="i">{{ i+4}}</option>
+              <option v-for="i in 6" :key="i">{{ i + 4 }}</option>
             </select>
           </div>
           <div>
@@ -129,14 +129,14 @@
               :disabled="!host"
               @change="updateGameMaxTime"
             >
-              <option v-for="i in 6" :key="i">{{ i*10 +20}}</option>
+              <option v-for="i in 6" :key="i">{{ i * 10 + 20 }}</option>
             </select>
           </div>
         </div>
         <div class="flex items-center space-x-2">
           <input
             :disabled="!host"
-            class="rounded border-opacity-20 focus:ring-transparent disabled:opacity-70"
+            class="rounded  border-opacity-20 focus:ring-transparent disabled:opacity-70"
             type="checkbox"
             name="showCategories"
             v-model="showCategories"
@@ -224,7 +224,7 @@ export default {
     }
 
     this.socket.on("CATEGORIES", (categories) => {
-      if (this.categories.length > 0) return
+      if (this.categories.length > 0) return;
       if (this.host == true) {
         this.categories = categories.map((e) => {
           return {
@@ -239,7 +239,7 @@ export default {
 
     this.socket.once("UPDATED", (room) => {
       this.socket.emit("GET CATEGORIES");
-    })
+    });
 
     this.socket.on("UPDATED", (room) => {
       if (room.started == true) {
@@ -252,7 +252,7 @@ export default {
 
       this.maxRounds = room.maxRounds;
       this.maxTime = room.maxTime;
-      this.showCategories = room.showCategories
+      this.showCategories = room.showCategories;
       this.categories = room.categories;
 
       for (let i = 0; i < 20; i++) {
@@ -273,12 +273,10 @@ export default {
     this.socket.emit("UPDATE", {
       id: parseInt(this.id),
     });
-
-    
   },
   beforeRouteLeave(to, from, next) {
     if (to.name != "Jeu") this.quit();
-    
+
     this.socket.removeAllListeners();
     next();
   },
@@ -367,7 +365,7 @@ export default {
       this.socket.emit("UPDATE SHOW CATEGORIES", {
         showCategories: this.showCategories,
         id: this.id,
-      });    
+      });
     },
     updateGameMaxRounds(event) {
       this.socket.emit("UPDATE MAX ROUNDS", {
@@ -404,7 +402,7 @@ export default {
       this.starting = true;
       this.socket.emit("START", {
         id: this.id,
-        categories: this.categories
+        categories: this.categories,
       });
     },
     emitChangeColorInServer() {
