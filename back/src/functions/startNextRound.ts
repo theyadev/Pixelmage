@@ -4,7 +4,7 @@ import update from "./update";
 import { resetAnswer, resetScore, resetRoom } from "./resets";
 
 
-export function everyoneAnswered(room: Room) {
+function everyoneAnswered(room: Room) {
   return room.users.every(e => e.answered)
 }
 
@@ -43,8 +43,6 @@ export function endRound(io: any, room: Room) {
   
   room.roundEnded = true
 
-  resetAnswer(room, true)
-
   update(io, room)
 
   let interval = setInterval(() => {
@@ -57,9 +55,7 @@ export function endRound(io: any, room: Room) {
 
       room.currentRound++;
 
-      resetAnswer(room, false);
-
-      
+      resetAnswer(room);
 
       if (room.maxRounds <= room.currentRound - 1) {
 
