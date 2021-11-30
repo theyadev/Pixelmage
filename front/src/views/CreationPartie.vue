@@ -224,6 +224,7 @@ export default {
     }
 
     this.socket.on("CATEGORIES", (categories) => {
+      if (this.categories.length > 0) return
       if (this.host == true) {
         this.categories = categories.map((e) => {
           return {
