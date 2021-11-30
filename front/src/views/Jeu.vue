@@ -8,7 +8,7 @@
           v-for="user in users"
           :key="user.username"
           class="flex flex-col items-center w-full px-6 py-2 bg-white rounded"
-          :class="user.answered ? 'bg-green-500' : ''"
+          :class="user.answered ? 'bg-green-500' : roundEnded ? 'bg-gray-500' : ''"
         >
           <div class="flex items-center space-x-1">
             <svg
