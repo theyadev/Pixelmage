@@ -6,7 +6,7 @@
           <h1 class="text-2xl font-bold text-white"> Oups, désolé il n'y a aucune partie en cours !</h1>
         </div>
         <div
-        v-else
+          v-else
           v-for="room in rooms"
           :key="room.id"
           class="flex flex-col px-4 py-3 mx-3 my-2 space-y-2 text-white bg-white rounded bg-opacity-10 w-60"
@@ -125,6 +125,10 @@ export default {
     this.socket.on("PUBLIC ROOMS", (rooms) => {
       this.rooms = rooms;
     });
+  },
+  beforeRouteLeave(to, from, next) {
+    this.socket.off("PUBLIC ROOMS")
+    next()
   },
   methods: {
     activeCategories(room) {

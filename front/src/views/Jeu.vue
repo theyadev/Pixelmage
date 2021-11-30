@@ -79,7 +79,7 @@
         </div>
         <div v-else class="flex flex-col items-center">
           <Leaderboard class="w-full" :users="users" />
-          <button class=" mt-10 bg-gray-200 rounded py-2 px-3" @click="returnToLobby">
+          <button class="px-3 py-2 mt-10 bg-gray-200 rounded " @click="returnToLobby">
               Retourner au lobby
           </button>
         </div>
@@ -346,9 +346,9 @@ export default {
     window.removeEventListener("beforeunload", this.handleRefresh);
   },
   beforeRouteLeave(to, from, next) {
-    console.log(to.name);
     if (to.name != "Creation Partie") this.quit();
 
+    this.socket.removeAllListeners();
     next();
   },
   data() {

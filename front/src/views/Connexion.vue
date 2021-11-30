@@ -119,6 +119,9 @@ export default {
           position: "top-center",
           duration: 1000,
         });
+
+        this.socket.off("CREATED")
+        this.socket.off("JOINED")
       }
     });
   },
