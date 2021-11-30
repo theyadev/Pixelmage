@@ -1,7 +1,6 @@
 import { getCategories } from "../db";
 import { Room } from "../types";
 import capitalize from "./capitalize";
-import { everyoneAnswered } from "./startNextRound";
 
 function formatAnswer(text: string) {
   return text.replace("_", " ").normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[a-zA-Z0-9]/g, "_")
@@ -29,7 +28,7 @@ export default async function update(io: any, room: Room) {
     showCategories: room.showCategories,
     showLeaderboard: room.showLeaderboard,
     started: room.started,
-    answer: currentAnswer ? everyoneAnswered(room) ? currentAnswer.answer : formatAnswer(currentAnswer.answer) : "",
+    answer: currentAnswer ? room.roundEnded ? currentAnswer.answer : formatAnswer(currentAnswer.answer) : "",
     category: room.showCategories && currentAnswer? capitalize(categories.filter(e => e.id == currentAnswer.categoryId)[0].category) : "",
     image: currentAnswer? currentAnswer.url : undefined,
   });
