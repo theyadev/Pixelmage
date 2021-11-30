@@ -34,7 +34,7 @@
       <div class="pb-10 md:col-span-6 lg:col-span-5 bg-black-600 lg:pb-0">
         <div class="flex flex-col items-center justify-center pt-5 space-y-8" v-if="!showLeaderboard">
           <div class="flex flex-col items-center w-full text-center ">
-            <div class="flex items-center justify-between w-full px-16 space-x-2 lg:px-48">
+            <div class="flex flex-col items-center justify-between w-full px-16 space-x-2 space-y-2 md:space-y-0 md:flex-row lg:px-44">
               <div class="flex items-center space-x-3">
                 <Timer
                   :max="max"
@@ -52,7 +52,7 @@
               </div>
             </div>
             <div class="px-5 text-5xl font-bold text-center text-white">
-              <span style="letter-spacing: 0.75rem">{{ hiddenAnswer }}</span>
+              <span class="px-2" style="letter-spacing: 0.75rem">{{ hiddenAnswer }}</span>
 
             </div>
           </div>

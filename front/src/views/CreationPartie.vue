@@ -23,8 +23,8 @@
           </p>
         </div>
         <div class="w-full h-px bg-white"></div>
-        <div class="flex space-x-10">
-          <div>
+        <div class="flex flex-wrap justify-between">
+          <div class="mt-1">
             <div>Catégories</div>
             <div class="relative">
               <div
@@ -110,7 +110,7 @@
               </div>
             </div>
           </div>
-          <div>
+          <div class="mt-1">
             <div>Rounds</div>
             <select
               class="py-1 mt-2 rounded text-black-900"
@@ -121,7 +121,7 @@
               <option v-for="i in 6" :key="i">{{ i + 4 }}</option>
             </select>
           </div>
-          <div>
+          <div class="mt-1">
             <div>Durée des rounds</div>
             <select
               class="py-1 mt-2 rounded text-black-900"
@@ -136,7 +136,7 @@
         <div class="flex items-center space-x-2">
           <input
             :disabled="!host"
-            class="rounded  border-opacity-20 focus:ring-transparent disabled:opacity-70"
+            class="rounded border-opacity-20 focus:ring-transparent disabled:opacity-70"
             type="checkbox"
             name="showCategories"
             v-model="showCategories"
