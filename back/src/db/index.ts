@@ -85,7 +85,7 @@ function getRandomImages(categories: Category[], images: Answer[], nb: number) {
     resImages = resImages.concat(randomImagesList[i].splice(0, numbers[i]));
   }
 
-  return resImages;
+  return resImages.sort(randomSort);
 }
 
 export async function getCategories() {
