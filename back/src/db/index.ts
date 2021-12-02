@@ -54,6 +54,7 @@ class Cache {
     cache.images = images;
 
     cache.date = new Date();
+    
   }
 }
 
