@@ -7,6 +7,9 @@ config();
 
 let database: Mongoose.Connection;
 
+/**
+ * Connect to the database.
+ */
 async function connect() {
   if (database) return;
   if (!process.env.MONGODB_URI) return undefined;
@@ -27,11 +30,14 @@ class Cache {
   }
 
   isRecent() {
-    return (
-      this.date && this.date >= new Date(new Date().getTime() - 10 * 60000)
-    );
+    return this.date
+      ? this.date >= new Date(new Date().getTime() - 10 * 60000)
+      : false;
   }
 
+  /**
+   * Update the cache with new values
+   */
   async update() {
     await connect();
 
@@ -48,6 +54,7 @@ class Cache {
     cache.images = images;
 
     cache.date = new Date();
+    
   }
 }
 
@@ -57,37 +64,57 @@ function randomSort() {
   return Math.random() - 0.5;
 }
 
-function getNumbersOfEach(categories: Category[], nb: number) {
-  let numbers = categories.map((e) => {
-    return Math.floor(nb / categories.length);
-  });
+/**
+ * Converts an Array of categories and a number of rounds to a list of numbers.
+ * Example: categories.length = 4, numberOfRounds = 7 -> returns [2, 2, 2, 1]
+ */
+function getNumbersOfEach(numberOfCategories: number, numberOfRounds: number) {
+  let numbers = [];
 
-  for (let i = 0; i < nb % categories.length; i++) {
+  for (let i = 0; i < numberOfCategories; i++) {
+    numbers.push(Math.floor(numberOfRounds / numberOfCategories));
+  }
+
+  for (let i = 0; i < numberOfRounds % numberOfCategories; i++) {
     numbers[i] += 1;
   }
 
-  return numbers
+  return numbers;
 }
 
-function getRandomImages(categories: Category[], images: Answer[], nb: number) {
+/**
+ * @returns An evenly random Array of Answer for each categories
+ */
+function getRandomImages(
+  categories: Category[],
+  images: Answer[],
+  numberOfRounds: number
+) {
   const randomImages = images.sort(randomSort);
-  const randomCategories = categories.sort(randomSort)
+  const randomCategories = categories.sort(randomSort);
 
-  const numbers = getNumbersOfEach(randomCategories, nb)
+  const numbers = getNumbersOfEach(categories.length, numberOfRounds);
 
-  let resImages: Answer[] = [];
+  let answers: Answer[] = [];
 
   const randomImagesList = randomCategories.map((category) => {
     return randomImages.filter((image) => image.categoryId == category.id);
   });
 
   for (let i = 0; i < numbers.length; i++) {
-    resImages = resImages.concat(randomImagesList[i].splice(0, numbers[i]));
+    const categoryAnswers = randomImagesList[i].splice(0, numbers[i]);
+
+    for (const answer of categoryAnswers) {
+      answers.push(answer);
+    }
   }
 
-  return resImages.sort(randomSort);
+  return answers.sort(randomSort);
 }
 
+/**
+ * @returns Every categories
+ */
 export async function getCategories() {
   if (!cache.isRecent()) {
     await cache.update();
@@ -96,6 +123,9 @@ export async function getCategories() {
   return cache.categories;
 }
 
+/**
+ * Get categories from an array of category names
+ */
 async function getFilterCategories(categoriesNames: string[]) {
   if (!cache.isRecent()) {
     await cache.update();
