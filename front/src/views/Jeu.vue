@@ -259,6 +259,8 @@ export default {
       );
     },
     submitAnswer() {
+      if (this.roundEnded == true) return
+      
       const index = this.users.findIndex((e) => e.username == this.username);
 
       if (this.users[index].answered == true) {
