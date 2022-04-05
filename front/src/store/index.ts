@@ -12,7 +12,7 @@ const BASE_URL = PRODUCTION
   : "http://localhost:" + PORT;
 
 const SERVER_URL = PRODUCTION
-  ? "pixelmage-back-f46xp.ondigitalocean.app"
+  ? "https://pixelmage-backend.herokuapp.com"
   : "http://localhost:8000";
 
 export default new Vuex.Store({
